@@ -123,7 +123,10 @@ namespace ChangesetSvnTestProject
             string localArchivePath = localPath;
             bool expected = true;
             bool actual;
-            actual = target.createChangeList(modifiedFileList, dirPath, localArchivePath);
+            actual = target.createChangeList(modifiedFileList, localArchivePath, dirPath, false);
+            Assert.AreEqual(expected, actual);
+
+            actual = target.createChangeList(modifiedFileList, localArchivePath, dirPath, true);
             Assert.AreEqual(expected, actual);
         }
     }

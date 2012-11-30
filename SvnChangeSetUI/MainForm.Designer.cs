@@ -28,67 +28,68 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.buttonGetArchiveInformation = new System.Windows.Forms.Button();
+            this.buttonCheckModifications = new System.Windows.Forms.Button();
+            this.listView1 = new System.Windows.Forms.ListView();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBoxPath = new System.Windows.Forms.TextBox();
-            this.buttonBrowse = new System.Windows.Forms.Button();
-            this.textBoxArchiveInformation = new System.Windows.Forms.TextBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.buttonZip = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // buttonGetArchiveInformation
+            // buttonCheckModifications
             // 
-            this.buttonGetArchiveInformation.Location = new System.Drawing.Point(41, 110);
-            this.buttonGetArchiveInformation.Name = "buttonGetArchiveInformation";
-            this.buttonGetArchiveInformation.Size = new System.Drawing.Size(94, 37);
-            this.buttonGetArchiveInformation.TabIndex = 0;
-            this.buttonGetArchiveInformation.Text = "Get Archive Information";
-            this.buttonGetArchiveInformation.UseVisualStyleBackColor = true;
-            this.buttonGetArchiveInformation.Click += new System.EventHandler(this.buttonGetArchiveInformation_Click);
+            this.buttonCheckModifications.Location = new System.Drawing.Point(563, 10);
+            this.buttonCheckModifications.Name = "buttonCheckModifications";
+            this.buttonCheckModifications.Size = new System.Drawing.Size(107, 45);
+            this.buttonCheckModifications.TabIndex = 5;
+            this.buttonCheckModifications.Text = "Check Modifications";
+            this.buttonCheckModifications.UseVisualStyleBackColor = true;
+            this.buttonCheckModifications.Click += new System.EventHandler(this.buttonCheckModifications_Click);
+            // 
+            // listView1
+            // 
+            this.listView1.Location = new System.Drawing.Point(12, 63);
+            this.listView1.Name = "listView1";
+            this.listView1.Size = new System.Drawing.Size(771, 446);
+            this.listView1.TabIndex = 6;
+            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.listView1.View = System.Windows.Forms.View.Details;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(38, 28);
+            this.label1.Location = new System.Drawing.Point(13, 26);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(97, 13);
-            this.label1.TabIndex = 1;
+            this.label1.TabIndex = 7;
             this.label1.Text = "Local Archive Path";
             // 
-            // textBoxPath
+            // textBox1
             // 
-            this.textBoxPath.Location = new System.Drawing.Point(141, 25);
-            this.textBoxPath.Name = "textBoxPath";
-            this.textBoxPath.Size = new System.Drawing.Size(253, 20);
-            this.textBoxPath.TabIndex = 2;
+            this.textBox1.Location = new System.Drawing.Point(116, 23);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(441, 20);
+            this.textBox1.TabIndex = 8;
             // 
-            // buttonBrowse
+            // buttonZip
             // 
-            this.buttonBrowse.Location = new System.Drawing.Point(400, 23);
-            this.buttonBrowse.Name = "buttonBrowse";
-            this.buttonBrowse.Size = new System.Drawing.Size(30, 23);
-            this.buttonBrowse.TabIndex = 3;
-            this.buttonBrowse.Text = "...";
-            this.buttonBrowse.UseVisualStyleBackColor = true;
-            // 
-            // textBoxArchiveInformation
-            // 
-            this.textBoxArchiveInformation.Location = new System.Drawing.Point(141, 110);
-            this.textBoxArchiveInformation.Multiline = true;
-            this.textBoxArchiveInformation.Name = "textBoxArchiveInformation";
-            this.textBoxArchiveInformation.ReadOnly = true;
-            this.textBoxArchiveInformation.Size = new System.Drawing.Size(253, 37);
-            this.textBoxArchiveInformation.TabIndex = 4;
+            this.buttonZip.Location = new System.Drawing.Point(676, 10);
+            this.buttonZip.Name = "buttonZip";
+            this.buttonZip.Size = new System.Drawing.Size(107, 45);
+            this.buttonZip.TabIndex = 5;
+            this.buttonZip.Text = "Zip It!";
+            this.buttonZip.UseVisualStyleBackColor = true;
+            this.buttonZip.Click += new System.EventHandler(this.buttonZip_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(795, 623);
-            this.Controls.Add(this.textBoxArchiveInformation);
-            this.Controls.Add(this.buttonBrowse);
-            this.Controls.Add(this.textBoxPath);
+            this.ClientSize = new System.Drawing.Size(795, 522);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.buttonGetArchiveInformation);
+            this.Controls.Add(this.listView1);
+            this.Controls.Add(this.buttonZip);
+            this.Controls.Add(this.buttonCheckModifications);
             this.Name = "Form1";
             this.Text = "Form1";
             this.ResumeLayout(false);
@@ -98,11 +99,11 @@
 
         #endregion
 
-        private System.Windows.Forms.Button buttonGetArchiveInformation;
+        private System.Windows.Forms.Button buttonCheckModifications;
+        private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBoxPath;
-        private System.Windows.Forms.Button buttonBrowse;
-        private System.Windows.Forms.TextBox textBoxArchiveInformation;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button buttonZip;
     }
 }
 

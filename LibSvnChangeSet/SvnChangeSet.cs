@@ -4,12 +4,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using SharpSvn;
-using System.IO;
-using System.Threading.Tasks;
 using System.ComponentModel;
+using System.IO;
+using System.IO.Compression;
+using SharpSvn;
 
 namespace LibSvnChangeSet
 {
@@ -71,9 +69,10 @@ namespace LibSvnChangeSet
         /// create the final change-set with the given directory
         /// </summary>
         /// <param name="modifiedFileList">Modified file list</param>
-        /// <param name="dirPath">directory path to write the file to</param>
         /// <param name="locaArchivePath">path to the local archive</param>
-        public bool createChangeList(List<string> modifiedFileList, string dirPath, string localArchivePath)
+        /// <param name="dirPath">directory path to write the file to</param>
+        /// <param name="bZipDir">Save as Zip file</param>
+        public bool createChangeList(List<string> modifiedFileList, string localArchivePath, string dirPath, bool bZipDir)
         {
             try
             {
@@ -97,21 +96,54 @@ namespace LibSvnChangeSet
                             {
                                 string oldFilePath = oldDirPath + @"\" + subPath;
                                 string newFilePath = newDirPath + @"\" + subPath;
-                                Directory.CreateDirectory(Path.GetDirectoryName(oldFilePath));
-                                Directory.CreateDirectory(Path.GetDirectoryName(newFilePath));
+
+                                createDirForFile(oldFilePath);
+                                createDirForFile(newFilePath);
+                                
+
                                 getFile(file, newFilePath, true);
                                 getFile(file, oldFilePath, false);
                             }
                         }
                     }
+                    if (bZipDir)
+                    {
+                        using (Ionic.Zip.ZipFile zfile = new Ionic.Zip.ZipFile())
+                        {
+                            zfile.AddDirectory(dirPath);
+                            zfile.AddProgress += new EventHandler<Ionic.Zip.AddProgressEventArgs>(file_AddProgress);
+                            string[] filenames = Directory.GetFiles(dirPath);
+                            zfile.AddFiles(filenames, true, string.Empty);
+
+                            string zipFilePath = dirPath + "\\" + "ChangeSet.zip";
+                            using (FileStream file = new FileStream(zipFilePath, FileMode.Create))
+                            {
+                                zfile.Save(file);
+                            }
+                        }
+                    }
                     return true;
                 }
+
+                
             }
             catch (Exception)
             {
                 
             }
             return false;
+        }
+
+        private static void createDirForFile(string fullFilePath)
+        {
+            string dirPath = Path.GetDirectoryName(fullFilePath);
+            if (!Directory.Exists(dirPath))
+                Directory.CreateDirectory(dirPath);
+        }
+
+        void file_AddProgress(object sender, Ionic.Zip.AddProgressEventArgs e)
+        {
+            
         }
 
         /// <summary>
@@ -129,7 +161,7 @@ namespace LibSvnChangeSet
             BackgroundWorker bw = new BackgroundWorker();
             bw.WorkerReportsProgress = true;
             bw.WorkerSupportsCancellation = true;
-            bw.DoWork += new DoWorkEventHandler(bw_GetModifiedFileList);
+            bw.DoWork += new DoWorkEventHandler(bw_DoWork);
             bw.ProgressChanged += new ProgressChangedEventHandler(bw_ProgressChanged);
             bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_RunWorkerCompleted);
             bgWorkerInfo = new WorkerInformation()
@@ -142,28 +174,32 @@ namespace LibSvnChangeSet
 
             if (!bw.IsBusy)
             {
-                bw.RunWorkerAsync(new WorkerInformation() { LocalPath = localPath, Worker = bw });
+                bw.RunWorkerAsync();
+                Console.ReadLine();
+
                 return true;
             }
             return false;
         }
+
+        
+
         #region Background Workers
-        private void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            throw new NotImplementedException();
+            this.bgWorkerInfo.CompletedHandler(sender, new CompletedEventArgs() { Message = "Completed" });
         }
 
-        private void bw_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        void bw_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             this.bgWorkerInfo.ProgressHandler(sender,
                 new ProgressEventArgs() { FileName = (string)e.UserState, FileStatus = FileStatus.Updated });
         }
 
-        private void bw_GetModifiedFileList(object sender, DoWorkEventArgs e)
+        void bw_DoWork(object sender, DoWorkEventArgs e)
         {
-            WorkerInformation info = sender as WorkerInformation;
-            BackgroundWorker bw = info.Worker;
-            string localPath = info.LocalPath;
+            BackgroundWorker bw = sender as BackgroundWorker;
+            string localPath = this.bgWorkerInfo.LocalPath;
 
             List<string> fileList = new List<string>();
             using (SvnClient client = new SvnClient())
