@@ -52,6 +52,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Defs.cs" />
+    <Compile Include="Helpers.cs" />
     <Compile Include="SvnChangeSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

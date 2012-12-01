@@ -95,20 +95,6 @@ namespace ChangesetSvnTestProject
         }
 
         /// <summary>
-        ///A test for getArchiveRevision
-        ///</summary>
-        [TestMethod()]
-        public void getArchiveRevisionTest()
-        {
-            SvnHelper target = new SvnHelper(); // TODO: Initialize to an appropriate value
-            string localPath = "";
-            long expected = 0; // TODO: Initialize to an appropriate value
-            long actual;
-            actual = target.getArchiveRevision(localPath);
-            Assert.AreNotEqual(expected, actual);
-        }
-
-        /// <summary>
         ///A test for createChangeList
         ///</summary>
         [TestMethod()]
@@ -123,10 +109,7 @@ namespace ChangesetSvnTestProject
             string localArchivePath = localPath;
             bool expected = true;
             bool actual;
-            actual = target.createChangeList(modifiedFileList, localArchivePath, dirPath, false);
-            Assert.AreEqual(expected, actual);
-
-            actual = target.createChangeList(modifiedFileList, localArchivePath, dirPath, true);
+            actual = target.createChangeList(modifiedFileList, localArchivePath, dirPath);
             Assert.AreEqual(expected, actual);
         }
     }

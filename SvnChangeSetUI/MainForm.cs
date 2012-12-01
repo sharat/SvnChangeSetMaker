@@ -44,7 +44,8 @@ namespace SvnChangeSet
             SvnHelper helper = new SvnHelper();
             string localPath = @"";
             List<string> files = helper.getModifiedFilePaths(localPath);
-            helper.createChangeList(files,localPath, @"C:\temp\cs", true);
+            helper.createChangeList(files,localPath, @"C:\temp\cs");
+            SvnChangeSetHelper.zipChangeSetDir(@"C:\temp\cs", @"C:\temp\cs\ChangeSet.zip");
         }
     }
 }

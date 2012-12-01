@@ -6,54 +6,14 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.IO.Compression;
 using SharpSvn;
 
 namespace LibSvnChangeSet
 {
     /// <summary>
-    /// Status of the file
-    /// </summary>
-    public enum FileStatus
-    {
-        Added,
-        Deleted,
-        Updated
-    }
-
-    /// <summary>
-    /// Operation Status. Mostly used for getting the modification list.
-    /// </summary>
-    public enum OperationStatus
-    {
-        Success,
-        InvalidArchive,
-        Error,
-        Cancelled
-    }
-
-    /// <summary>
-    /// Progress callback parameters
-    /// </summary>
-    public class ProgressEventArgs : EventArgs
-    {
-        public string FileName { get; set; }
-        public FileStatus FileStatus { get; set; }
-    }
-
-    /// <summary>
-    /// Completed event args
-    /// </summary>
-    public class CompletedEventArgs : EventArgs
-    {
-        public OperationStatus Status { get; set; }
-        public string Message { get; set; }
-    }
-    
-    /// <summary>
     /// Background Worker information
     /// </summary>
-    public class WorkerInformation
+    internal class WorkerInformation
     {
         public BackgroundWorker Worker { get; set; }
         public string LocalPath { get;set;}
@@ -61,6 +21,9 @@ namespace LibSvnChangeSet
         public EventHandler<CompletedEventArgs> CompletedHandler { get; set; }
     }
 
+    /// <summary>
+    /// Public class helps to retrieve the changeset information
+    /// </summary>
     public class SvnHelper
     {
         private WorkerInformation bgWorkerInfo = null;
@@ -70,18 +33,17 @@ namespace LibSvnChangeSet
         /// </summary>
         /// <param name="modifiedFileList">Modified file list</param>
         /// <param name="locaArchivePath">path to the local archive</param>
-        /// <param name="dirPath">directory path to write the file to</param>
-        /// <param name="bZipDir">Save as Zip file</param>
-        public bool createChangeList(List<string> modifiedFileList, string localArchivePath, string dirPath, bool bZipDir)
+        /// <param name="targetChangeSetDir">directory path to write the file to</param>
+        public bool createChangeList(List<string> modifiedFileList, string localArchivePath, string targetChangeSetDir)
         {
             try
             {
                 if (modifiedFileList == null || modifiedFileList.Count == 0 ||
-                    string.IsNullOrEmpty(dirPath) || string.IsNullOrEmpty(localArchivePath))
+                    string.IsNullOrEmpty(targetChangeSetDir) || string.IsNullOrEmpty(localArchivePath))
                     return false;
 
-                string newDirPath = dirPath + @"\new";
-                string oldDirPath = dirPath + @"\old";
+                string newDirPath = targetChangeSetDir + @"\new";
+                string oldDirPath = targetChangeSetDir + @"\old";
                 Directory.CreateDirectory(newDirPath);
                 Directory.CreateDirectory(oldDirPath);
 
@@ -97,35 +59,16 @@ namespace LibSvnChangeSet
                                 string oldFilePath = oldDirPath + @"\" + subPath;
                                 string newFilePath = newDirPath + @"\" + subPath;
 
-                                createDirForFile(oldFilePath);
-                                createDirForFile(newFilePath);
-                                
-
+                                // Write new and old files to the respective directories
                                 getFile(file, newFilePath, true);
                                 getFile(file, oldFilePath, false);
                             }
                         }
                     }
-                    if (bZipDir)
-                    {
-                        using (Ionic.Zip.ZipFile zfile = new Ionic.Zip.ZipFile())
-                        {
-                            zfile.AddDirectory(dirPath);
-                            zfile.AddProgress += new EventHandler<Ionic.Zip.AddProgressEventArgs>(file_AddProgress);
-                            string[] filenames = Directory.GetFiles(dirPath);
-                            zfile.AddFiles(filenames, true, string.Empty);
-
-                            string zipFilePath = dirPath + "\\" + "ChangeSet.zip";
-                            using (FileStream file = new FileStream(zipFilePath, FileMode.Create))
-                            {
-                                zfile.Save(file);
-                            }
-                        }
-                    }
+               
                     return true;
                 }
-
-                
+               
             }
             catch (Exception)
             {
@@ -133,18 +76,7 @@ namespace LibSvnChangeSet
             }
             return false;
         }
-
-        private static void createDirForFile(string fullFilePath)
-        {
-            string dirPath = Path.GetDirectoryName(fullFilePath);
-            if (!Directory.Exists(dirPath))
-                Directory.CreateDirectory(dirPath);
-        }
-
-        void file_AddProgress(object sender, Ionic.Zip.AddProgressEventArgs e)
-        {
-            
-        }
+        
 
         /// <summary>
         /// Asynchronous way to get modified file list
@@ -181,8 +113,6 @@ namespace LibSvnChangeSet
             }
             return false;
         }
-
-        
 
         #region Background Workers
         void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -247,21 +177,6 @@ namespace LibSvnChangeSet
             return fileList;
         }
 
-        /// <summary>
-        /// The working copy's revision
-        /// </summary>
-        /// <param name="localPath">local archive path</param>
-        /// <param name="pathToWrite"></param>
-        /// <returns></returns>
-        public long getArchiveRevision(string localPath)
-        {
-            using (SvnWorkingCopyClient workingCopyClient = new SvnWorkingCopyClient())
-            {
-                SvnWorkingCopyVersion version;
-                workingCopyClient.GetVersion(localPath, out version);
-                return version.End;
-            }
-        }
 
         /// <summary>
         /// Get the revision of a specified file and write to the path specified
@@ -271,6 +186,7 @@ namespace LibSvnChangeSet
         /// <param name="bWorkingCopy">Simply copy from source to destination. Or else get the base version from SVN</param>
         public void getFile(string fileWorkingCopyPath, string filePathToWrite, bool bWorkingCopy)
         {
+            SvnChangeSetHelper.createDirForFile(filePathToWrite);
             if (bWorkingCopy) // Copy the file the the destination. This is used for old files typically.
                 File.Copy(fileWorkingCopyPath, filePathToWrite);
             else
