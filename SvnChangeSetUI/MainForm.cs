@@ -23,9 +23,9 @@ namespace SvnChangeSet
         private void buttonCheckModifications_Click(object sender, EventArgs e)
         {
             listView1.Items.Clear();
-            SvnHelper helper = new SvnHelper();
+            SvnChangeSetMaker helper = new SvnChangeSetMaker();
             string localPath = @"";
-            helper.getModifiedListAsync(localPath, cb_progress, cb_Completed);
+            helper.getModifiedFilesAsync(localPath, cb_progress, cb_Completed);
 
         }
 
@@ -41,9 +41,9 @@ namespace SvnChangeSet
 
         private void buttonZip_Click(object sender, EventArgs e)
         {
-            SvnHelper helper = new SvnHelper();
+            SvnChangeSetMaker helper = new SvnChangeSetMaker();
             string localPath = @"";
-            List<string> files = helper.getModifiedFilePaths(localPath);
+            List<string> files = helper.getModifiedFiles(localPath);
             helper.createChangeList(files,localPath, @"C:\temp\cs");
             SvnChangeSetHelper.zipChangeSetDir(@"C:\temp\cs", @"C:\temp\cs\ChangeSet.zip");
         }

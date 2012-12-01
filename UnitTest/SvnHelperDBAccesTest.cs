@@ -67,16 +67,16 @@ namespace ChangesetSvnTestProject
         
 
         /// <summary>
-        ///A test for getModifiedFilePaths
+        ///A test for getModifiedFiles
         ///</summary>
         [TestMethod()]
         public void getModifiedFilePathsTest()
         {
-            SvnHelper target = new SvnHelper(); // TODO: Initialize to an appropriate value
+            SvnChangeSetMaker target = new SvnChangeSetMaker(); // TODO: Initialize to an appropriate value
             string localPath = "";
             List<string> expected = null;
             List<string> actual;
-            actual = target.getModifiedFilePaths(localPath);
+            actual = target.getModifiedFiles(localPath);
             Assert.AreNotEqual(expected, actual);
         }
 
@@ -86,11 +86,11 @@ namespace ChangesetSvnTestProject
         [TestMethod()]
         public void getFileRevisionTest()
         {
-            SvnHelper target = new SvnHelper();
+            SvnChangeSetMaker target = new SvnChangeSetMaker();
             string fileWorkingCopyPath = string.Empty;
             string filePathToWrite = string.Empty;
             string localPath = "";
-            List<string> files = target.getModifiedFilePaths(localPath);
+            List<string> files = target.getModifiedFiles(localPath);
             
         }
 
@@ -100,10 +100,10 @@ namespace ChangesetSvnTestProject
         [TestMethod()]
         public void createChangeListTest()
         {
-            SvnHelper target = new SvnHelper(); // TODO: Initialize to an appropriate value
+            SvnChangeSetMaker target = new SvnChangeSetMaker(); // TODO: Initialize to an appropriate value
             string localPath = "";
             List<string> modifiedFileList;
-            modifiedFileList = target.getModifiedFilePaths(localPath);
+            modifiedFileList = target.getModifiedFiles(localPath);
 
             string dirPath = @"C:\temp\cstest";
             string localArchivePath = localPath;
@@ -177,19 +177,19 @@ namespace UnitTest
 
 
         /// <summary>
-        ///A test for getModifiedListAsync
+        ///A test for getModifiedFilesAsync
         ///</summary>
         [TestMethod()]
         public void getModifiedListAsyncTest()
         {
-            SvnHelper target = new SvnHelper(); // TODO: Initialize to an appropriate value
+            SvnChangeSetMaker target = new SvnChangeSetMaker(); // TODO: Initialize to an appropriate value
             string localPath = "";
             EventHandler<ProgressEventArgs> progressCallback = cb_Progress;
             EventHandler<CompletedEventArgs> completedCallback = cb_completed;
             bool expected = true;
             bool actual;
 
-            actual = target.getModifiedListAsync(localPath, progressCallback, completedCallback);
+            actual = target.getModifiedFilesAsync(localPath, progressCallback, completedCallback);
             Assert.AreEqual(expected, actual);
         }
 

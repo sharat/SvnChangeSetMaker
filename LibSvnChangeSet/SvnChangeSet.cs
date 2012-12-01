@@ -24,7 +24,7 @@ namespace LibSvnChangeSet
     /// <summary>
     /// Public class helps to retrieve the changeset information
     /// </summary>
-    public class SvnHelper
+    public class SvnChangeSetMaker
     {
         private WorkerInformation bgWorkerInfo = null;
 
@@ -85,7 +85,7 @@ namespace LibSvnChangeSet
         /// <param name="progressCallback">Progress callback</param>
         /// <param name="completedCallback">Completed callback</param>
         /// <returns>true if successfully submits</returns>
-        public bool getModifiedListAsync(string localPath, EventHandler<ProgressEventArgs> progressCallback, EventHandler<CompletedEventArgs> completedCallback)
+        public bool getModifiedFilesAsync(string localPath, EventHandler<ProgressEventArgs> progressCallback, EventHandler<CompletedEventArgs> completedCallback)
         {
             if (string.IsNullOrEmpty(localPath) || null == progressCallback || null == completedCallback)
                 return false;
@@ -159,7 +159,7 @@ namespace LibSvnChangeSet
         /// </summary>
         /// <param name="localPath">Archive path</param>
         /// <returns></returns>
-        public List<string> getModifiedFilePaths(string localPath)
+        public List<string> getModifiedFiles(string localPath)
         {
             List<string> fileList = new List<string>();
             using (SvnClient client = new SvnClient())
@@ -184,7 +184,7 @@ namespace LibSvnChangeSet
         /// <param name="fileWorkingCopyPath">local path for the file to get the specfied version</param>
         /// <param name="filePathToWrite">Path to write the new file</param>
         /// <param name="bWorkingCopy">Simply copy from source to destination. Or else get the base version from SVN</param>
-        public void getFile(string fileWorkingCopyPath, string filePathToWrite, bool bWorkingCopy)
+        void getFile(string fileWorkingCopyPath, string filePathToWrite, bool bWorkingCopy)
         {
             SvnChangeSetHelper.createDirForFile(filePathToWrite);
             if (bWorkingCopy) // Copy the file the the destination. This is used for old files typically.
