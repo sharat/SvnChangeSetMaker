@@ -21,10 +21,10 @@ namespace SvnChangeSetMetro
             string localPath = @"D:\dev\ExportTool\trunk";
             List<string> modifiedFiles = helper.getModifiedFiles(localPath);
 
-            listViewChanges.Items.Clear();
-            foreach (string file in modifiedFiles)
-                listViewChanges.Items.Add(file);
-         //   activityProgressbar.IsActive = false;
+         //   listViewChanges.Items.Clear();
+         //   foreach (string file in modifiedFiles)
+         //       listViewChanges.Items.Add(file);
+         ////   activityProgressbar.IsActive = false;
         }
     }
 }

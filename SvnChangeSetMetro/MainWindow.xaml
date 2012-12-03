@@ -6,6 +6,9 @@
 
     <Window.Resources>
         <ResourceDictionary>
+            <DataTemplate x:Key="reposTemplate">
+                <Label Content="{Binding XPath=Name}"/>
+            </DataTemplate>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colours.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
@@ -16,22 +19,32 @@
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
-        <StackPanel Margin="20,20,0,0">
-            
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,5,0,5">
-                <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
-                    <TextBlock Text="Repository Path" VerticalAlignment="Center"></TextBlock>
-                    <TextBox Name="textBoxRepoPath" Margin="5,0,0,0" HorizontalAlignment="Stretch" MinWidth="150"></TextBox>
-                    <Button Name="buttoncheckForModifications" Width="134" Margin="5,0,0,0" Content="Check Modifications" Click="buttoncheckForModifications_Click" HorizontalAlignment="Right"></Button>
-                    <Button Name="buttoncheckZipIt" Width="60" Margin="5,0,0,0" Content="Zip It!" HorizontalAlignment="Right"></Button>
-                    <Controls:ProgressRing Name="activityProgressbar" Style="" MinHeight="30" MinWidth="30" Margin="5,5,0,5"></Controls:ProgressRing>
-                </StackPanel>
-            </StackPanel>
-            <StackPanel>
-            </StackPanel>
-            <StackPanel>
-                <ListView Name="listViewChanges" />
-            </StackPanel>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="64" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="400" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Margin="10,10,10,10" VerticalAlignment="Center">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Left" Text="Repository Path" VerticalAlignment="Center"></TextBlock>
+                <TextBox Name="textBoxRepoPath" Margin="5,0,0,0" HorizontalAlignment="Stretch" MinWidth="260"></TextBox>
+                <Button DockPanel.Dock="Right" Name="buttonAddRepo" Width="32" Content="+" HorizontalAlignment="Right"></Button>
+            </DockPanel>
         </StackPanel>
+        <ListBox Grid.Row="1" Margin="12,0,10,12" Name="listViewRepos"
+                 ItemsSource="{Binding}"
+                 ItemTemplate="{StaticResource reposTemplate}"
+                 IsSynchronizedWithCurrentItem="True"
+                 Visibility="Visible" SelectionMode="Single">
+        </ListBox>
+                  
+        <ListBox Grid.Column="1" Grid.Row="1" Margin="12,0,10,12" Name="listViewChanges" />
+
+        <Grid.DataContext>
+            <XmlDataProvider x:Name="ReposData" Source="Repos.xml" XPath="Repositories/Repo" />
+        </Grid.DataContext>
     </Grid>
 </Controls:MetroWindow>

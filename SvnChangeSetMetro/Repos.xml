@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Repositories>
+  <Repo>
+    <Name>Repo-Name</Name>
+    <Path>Repo-Path</Path>
+    <Description>Description</Description>
+  </Repo>
+
+  <Repo>
+    <Name>Repo-Name</Name>
+    <Path>Repo-Path</Path>
+    <Description>Description</Description>
+  </Repo>
+
+  <Repo>
+    <Name>Repo-Name</Name>
+    <Path>Repo-Path</Path>
+    <Description>Description</Description>
+  </Repo>
+
+  <Repo>
+    <Name>Repo-Name</Name>
+    <Path>Repo-Path</Path>
+    <Description>Description</Description>
+  </Repo>
+
+  <Repo>
+    <Name>Repo-Name</Name>
+    <Path>Repo-Path</Path>
+    <Description>Description</Description>
+  </Repo>
+
+  <Repo>
+    <Name>Repo-Name</Name>
+    <Path>Repo-Path</Path>
+    <Description>Description</Description>
+  </Repo>
+  
+</Repositories>
