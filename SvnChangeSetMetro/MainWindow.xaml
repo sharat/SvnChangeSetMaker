@@ -17,16 +17,21 @@
     </Window.Resources>
     <Grid>
         <StackPanel Margin="20,20,0,0">
-            <StackPanel Orientation="Horizontal" Height="32">
-                <TextBlock Text="Repository Path" HorizontalAlignment="Center"></TextBlock>
-                <TextBox Name="textBoxRepoPath" Width="450" Margin="5,0,0,0"></TextBox>
-                <Button Name="buttoncheckForModifications" Width="134" Margin="5,0,0,0" Content="Check Modifications" Click="buttoncheckForModifications_Click"></Button>
-                <Button Name="buttoncheckZipIt" Width="60" Margin="5,0,0,0" Content="Zip It!"></Button>
+            
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,5,0,5">
+                <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                    <TextBlock Text="Repository Path" VerticalAlignment="Center"></TextBlock>
+                    <TextBox Name="textBoxRepoPath" Margin="5,0,0,0" HorizontalAlignment="Stretch" MinWidth="150"></TextBox>
+                    <Button Name="buttoncheckForModifications" Width="134" Margin="5,0,0,0" Content="Check Modifications" Click="buttoncheckForModifications_Click" HorizontalAlignment="Right"></Button>
+                    <Button Name="buttoncheckZipIt" Width="60" Margin="5,0,0,0" Content="Zip It!" HorizontalAlignment="Right"></Button>
+                    <Controls:ProgressRing Name="activityProgressbar" Style="" MinHeight="30" MinWidth="30" Margin="5,5,0,5"></Controls:ProgressRing>
+                </StackPanel>
             </StackPanel>
-
-            <ListView Name="listViewChanges">
-
-            </ListView>
+            <StackPanel>
+            </StackPanel>
+            <StackPanel>
+                <ListView Name="listViewChanges" />
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Controls:MetroWindow>
