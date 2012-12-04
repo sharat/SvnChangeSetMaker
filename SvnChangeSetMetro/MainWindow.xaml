@@ -31,7 +31,7 @@
             <DockPanel>
                 <TextBlock DockPanel.Dock="Left" Text="Repository Path" VerticalAlignment="Center"></TextBlock>
                 <TextBox Name="textBoxRepoPath" Margin="5,0,0,0" HorizontalAlignment="Stretch" MinWidth="260"></TextBox>
-                <Button DockPanel.Dock="Right" Name="buttonAddRepo" Width="32" Content="+" HorizontalAlignment="Right"></Button>
+                <Button DockPanel.Dock="Right" Name="buttonAddRepo" Width="32" Content="+" HorizontalAlignment="Right" Click="buttonAddRepo_Click"></Button>
             </DockPanel>
         </StackPanel>
         <ListBox Grid.Row="1" Margin="12,0,10,12" Name="listViewRepos"
