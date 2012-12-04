@@ -51,11 +51,15 @@ namespace SvnChangeSetMetro
                 if (x == null)
                     MessageBox.Show("The repository added already exists in the list.");
                 else
-                    doc.Add(new XNode("Repositories", 
-                        new XNode("Repository",
+                {
+                    doc.Root.Add(new XElement("Repository",
                             new XElement("Name","Repo-name"),
                             new XElement("Path", path),
-                            new XElement("Description", "sample description"))));
+                            new XElement("Description", "sample description")));
+                    doc.Save("Repos.xml");
+                    ReposData.Refresh();
+                    listViewRepos.Items.Refresh();
+                }
             }
             catch (Exception ex)
             {
