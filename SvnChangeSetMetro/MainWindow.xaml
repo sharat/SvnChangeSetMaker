@@ -4,20 +4,29 @@
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         Title="ChangeSet Maker" Height="600" Width="800" ShowIconOnTitleBar="True" Closing="MetroWindow_Closing" TitlebarHeight="48">
 
+
     <Window.Resources>
         <ResourceDictionary>
-            <!--<DataTemplate x:Key="reposTemplate">
-                <Label Content="{Binding XPath=Name}"/>
-            </DataTemplate>-->
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colours.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+                <ResourceDictionary Source="Resources/Icons.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
+
+
+
+    <Controls:MetroWindow.WindowCommands>
+        <Controls:WindowCommands>
+            <Button Content="settings" />
+
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.WindowCommands>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="64" />
@@ -34,32 +43,44 @@
                 <Button DockPanel.Dock="Right" Name="buttonAddRepo" Width="32" Content="+" HorizontalAlignment="Right" Click="buttonAddRepo_Click"></Button>
             </DockPanel>
         </StackPanel>
-        
+
         <ListBox Grid.Row="1" Grid.Column="0" Margin="12,0,10,12" Name="listViewRepos"
                  IsSynchronizedWithCurrentItem="True"
                  Visibility="Visible" SelectionMode="Single" SelectionChanged="listViewRepos_SelectionChanged">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
-                        <Label x:Name="lbItemTitle" Content="{Binding Name}"> </Label>
+                        <Label x:Name="lbItemTitle" Content="{Binding Name}"></Label>
                         <Label x:Name="lbItemPath" Content="{Binding Path}"></Label>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-                  
+
         <ListBox Grid.Column="1" Grid.Row="1" Margin="12,0,10,12" Name="listViewChanges" Background="AliceBlue" BorderBrush="Black">
-            
+
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <CheckBox x:Name="lblChangedSelected" IsChecked="{Binding Selected}" VerticalAlignment="Center"></CheckBox>
                         <Label x:Name="lblChangedStatus" Content="{Binding Status}"></Label>
-                        <Label x:Name="lblChangedPath" Content="{Binding Path}"> </Label>
+                        <Label x:Name="lblChangedPath" Content="{Binding Path}"></Label>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <!--<CheckBox Content="CheckBox" Grid.Column="1" Height="16" HorizontalAlignment="Left" Margin="150,20,0,0" Name="checkBox1" VerticalAlignment="Top" />-->
+        <StackPanel Visibility="Visible" Name="changeListControlbar" Grid.Column="1" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+            <CheckBox IsChecked="True" Content="Save in Zip format" VerticalAlignment="Center"></CheckBox>
+            <Button Name="buttonSaveChangeList" Margin="10,0,0,0" Click="buttonSaveChangeList_Click">
+                <Rectangle Width="20" Height="20">
+                    <Rectangle.Resources>
+                        <SolidColorBrush x:Key="BlackBrush" Color="Black" />
+                    </Rectangle.Resources>
+                    <Rectangle.Fill>
+                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_save}" />
+                    </Rectangle.Fill>
+                </Rectangle>
+            </Button>
+        </StackPanel>
     </Grid>
 </Controls:MetroWindow>

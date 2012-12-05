@@ -6,6 +6,7 @@ using System.Linq;
 using System.IO;
 using System;
 using MahApps.Metro;
+using System.Windows.Media.Imaging;
 
 namespace SvnChangeSetMetro
 {
@@ -46,7 +47,6 @@ namespace SvnChangeSetMetro
             InitializeRepoData();
             modifiedFileInfo = new List<ChangedFilesInfo>();
             listViewChanges.ItemsSource = modifiedFileInfo;
-            
         }
 
         private void buttoncheckForModifications_Click(object sender, RoutedEventArgs e)
@@ -147,7 +147,10 @@ namespace SvnChangeSetMetro
                     LibSvnChangeSet.SvnChangeSetMaker changeset = new LibSvnChangeSet.SvnChangeSetMaker();
                     List<string> modifiedFileList = changeset.getModifiedFiles(selectedItem.Path);
                     if (modifiedFileList == null)
+                    {
                         selectedRepoPath = string.Empty;
+                        changeListControlbar.Visibility = System.Windows.Visibility.Hidden;
+                    }
                     else
                     {
                         selectedRepoPath = selectedItem.Path;
@@ -160,11 +163,31 @@ namespace SvnChangeSetMetro
                                                      Status = "Modified"
                                                  }).ToList();
                         listViewChanges.ItemsSource = modifiedFileInfo;
+                        if(modifiedFileInfo.Count > 0)
+                            changeListControlbar.Visibility = Visibility.Visible;
                     }
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show("Error getting changelist from the specified path");
+                }
+            }
+        }
+
+        private void buttonSaveChangeList_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            if( folderBrowserDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK &&
+                !string.IsNullOrEmpty(folderBrowserDialog1.SelectedPath))
+            {
+                List<string> filetoSave = (from change in this.modifiedFileInfo
+                                           where change.Selected
+                                           select change.Path).ToList();
+
+                if (filetoSave.Count > 0)
+                {
+                    LibSvnChangeSet.SvnChangeSetMaker changeset = new LibSvnChangeSet.SvnChangeSetMaker();
+                    changeset.createChangeList(filetoSave, selectedRepoPath, folderBrowserDialog1.SelectedPath);
                 }
             }
         }
