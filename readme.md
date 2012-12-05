@@ -19,4 +19,4 @@ The zip file is made using DotNetZip library and use can choose to zip or store 
 To get the changesets [BackgroundWorker](http://msdn.microsoft.com/en-us/library/system.componentmodel.backgroundworker.aspx) class is used. The user can give custom event handler to subscribe for notifications.
 
 ## MetroUI
-
+The Application features different type of UI. The standalone Metro application uses [Mahapps.Metro](https://github.com/MahApps/MahApps.Metro) Framework.
