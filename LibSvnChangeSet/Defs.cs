@@ -49,6 +49,6 @@ namespace LibSvnChangeSet
     public class CompletedEventArgs : EventArgs
     {
         public OperationStatus Status { get; set; }
-        public string Message { get; set; }
+        public string ErrorMessage { get; set; }
     }
 }

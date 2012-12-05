@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-        Title="ChangeSet Maker" Height="600" Width="800" ShowIconOnTitleBar="True" Closing="MetroWindow_Closing" TitlebarHeight="48">
+        Title="ChangeSet Maker" Height="760" Width="1024" ShowIconOnTitleBar="True" Closing="MetroWindow_Closing" TitlebarHeight="48">
 
 
     <Window.Resources>
@@ -48,7 +48,7 @@
                 </Grid.ColumnDefinitions>
 
                 <Label Grid.Column="0" DockPanel.Dock="Left" Content="Repository Path" VerticalAlignment="Center"></Label>
-                <TextBox Grid.Column="1" Name="textBoxRepoPath" Controls:TextboxHelper.ClearTextButton="True" Margin="5,0,0,0" HorizontalAlignment="Stretch"></TextBox>
+                <TextBox Grid.Column="1" MinHeight="32" Name="textBoxRepoPath" Controls:TextboxHelper.ClearTextButton="True" Margin="5,0,0,0" HorizontalAlignment="Stretch"></TextBox>
                 <Button Grid.Column="2" DockPanel.Dock="Right" Name="buttonAddRepo" Width="32" Content="+" HorizontalAlignment="Right" Click="buttonAddRepo_Click"></Button>
             </Grid>
             
@@ -57,7 +57,7 @@
 
         <ListBox Grid.Row="1" Grid.Column="0" Margin="12,0,10,12" Name="listViewRepos"
                  IsSynchronizedWithCurrentItem="True"
-                 Visibility="Visible" SelectionMode="Single" SelectionChanged="listViewRepos_SelectionChanged" MouseRightButtonDown="listViewRepos_MouseRightButtonDown" MouseDown="listViewRepos_MouseDown">
+                 Visibility="Visible" SelectionMode="Single" SelectionChanged="listViewRepos_SelectionChanged" MouseRightButtonDown="listViewRepos_MouseRightButtonDown">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
@@ -75,33 +75,53 @@
             </ListBox.ContextMenu>
         </ListBox>
 
-        <ListBox Grid.Column="1" Grid.Row="1" Margin="12,0,10,12" Name="listViewChanges" Background="AliceBlue" BorderBrush="Black">
+        <Grid Grid.Column="1" Grid.Row="0" Background="Beige" Name="gridControlbar">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="128"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            
+            <StackPanel Name="controlbarError" Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center">
+                <Label Name="labelErrorChangeList" Margin="10,0,0,0"  Foreground="Blue" MinHeight="32"></Label>
+                <StackPanel Name="controlbarSelectDeselect">
+                    <CheckBox Name="checkboxSelectDeselect" IsChecked="True" Margin="10,0,10,0" Content="Select/Deselect " VerticalAlignment="Center"></CheckBox>
+                </StackPanel>
+            </StackPanel>
+            
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Name="controlbarSave">
+                <CheckBox Name="checkboxSaveInZip" IsChecked="True" Content="Zip format" VerticalAlignment="Center"></CheckBox>
+                <Button Name="buttonSaveChangeList" Margin="10,0,0,0" Click="buttonSaveChangeList_Click">
+                    <Rectangle Width="20" Height="20">
+                        <Rectangle.Resources>
+                            <SolidColorBrush x:Key="BlackBrush" Color="Black" />
+                        </Rectangle.Resources>
+                        <Rectangle.Fill>
+                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_save}" />
+                        </Rectangle.Fill>
+                    </Rectangle>
+                </Button>
+            </StackPanel>
+            
+        </Grid>
 
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <CheckBox x:Name="lblChangedSelected" IsChecked="{Binding Selected}" VerticalAlignment="Center"></CheckBox>
-                        <Label x:Name="lblChangedStatus" Content="{Binding Status}"></Label>
-                        <Label x:Name="lblChangedPath" Content="{Binding Path}"></Label>
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-        <StackPanel Name="spChangeListError" Visibility="Hidden" Grid.Column="1" Grid.Row="0">
-            <Label Name="labelErrorChangeList" FontSize="14"></Label>
-        </StackPanel>
-        <StackPanel Name="spChangeListControlbar" Grid.Column="1" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
-            <CheckBox IsChecked="True" Content="Save in Zip format" VerticalAlignment="Center"></CheckBox>
-            <Button Name="buttonSaveChangeList" Margin="10,0,0,0" Click="buttonSaveChangeList_Click">
-                <Rectangle Width="20" Height="20">
-                    <Rectangle.Resources>
-                        <SolidColorBrush x:Key="BlackBrush" Color="Black" />
-                    </Rectangle.Resources>
-                    <Rectangle.Fill>
-                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_save}" />
-                    </Rectangle.Fill>
-                </Rectangle>
-            </Button>
+        
+        
+        
+        
+        <StackPanel Grid.Column="1" Grid.Row="1" >
+            
+
+            <ListBox Margin="12,0,10,12" Name="listViewChanges">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <CheckBox x:Name="lblChangedSelected" IsChecked="{Binding Selected}" VerticalAlignment="Center"></CheckBox>
+                                <Label x:Name="lblChangedStatus" Content="{Binding Status}"></Label>
+                                <Label x:Name="lblChangedPath" Content="{Binding Path}"></Label>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
         </StackPanel>
     </Grid>
 </Controls:MetroWindow>

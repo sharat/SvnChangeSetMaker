@@ -8,6 +8,7 @@ using System;
 using MahApps.Metro;
 using System.Windows.Media.Imaging;
 using System.Diagnostics;
+using LibSvnChangeSet;
 
 namespace SvnChangeSetMetro
 {
@@ -48,7 +49,6 @@ namespace SvnChangeSetMetro
             InitializeRepoData();
             modifiedFileInfo = new List<ChangedFilesInfo>();
             listViewChanges.ItemsSource = modifiedFileInfo;
-            spChangeListControlbar.Visibility = System.Windows.Visibility.Hidden;
         }
 
         private void buttoncheckForModifications_Click(object sender, RoutedEventArgs e)
@@ -135,6 +135,24 @@ namespace SvnChangeSetMetro
             }
         }
 
+        void modifiedListProgress(object sender, ProgressEventArgs e)
+        {
+            this.modifiedFileInfo.Add(new ChangedFilesInfo() { Path = e.FileName, Status = e.FileStatus.ToString(), Selected = true });
+            listViewChanges.Items.Refresh();
+        }
+
+        void modifiedListCompleted(object sender, CompletedEventArgs e)
+        {
+            listViewChanges.ItemsSource = this.modifiedFileInfo;
+            listViewChanges.Items.Refresh();
+            if (!string.IsNullOrEmpty(e.ErrorMessage))
+                showMessage(e.ErrorMessage, true);
+            else if (this.modifiedFileInfo.Count > 0)
+                showMessage("Found " + modifiedFileInfo.Count.ToString() + " changes...", false);
+            else
+                showMessage("No changes found...", true);
+        }
+
         private void listViewRepos_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             RepoInfo selectedItem = (RepoInfo)listViewRepos.SelectedItem;
@@ -142,48 +160,25 @@ namespace SvnChangeSetMetro
                 return;
             else
             {
-                this.modifiedFileInfo.Clear();
+                if (this.modifiedFileInfo != null)
+                    this.modifiedFileInfo.Clear();
+                else
+                    this.modifiedFileInfo = new List<ChangedFilesInfo>();
+
                 listViewChanges.ItemsSource = this.modifiedFileInfo;
                 try
                 {
                     LibSvnChangeSet.SvnChangeSetMaker changeset = new LibSvnChangeSet.SvnChangeSetMaker();
-                    List<string> modifiedFileList = changeset.getModifiedFiles(selectedItem.Path);
-                    if (modifiedFileList == null)
-                    {
-                        selectedRepoPath = string.Empty;
-                        spChangeListControlbar.Visibility = System.Windows.Visibility.Hidden;
-                    }
-                    else
-                    {
-                        selectedRepoPath = selectedItem.Path;
-
-                        this.modifiedFileInfo = (from path in modifiedFileList
-                                                 select new ChangedFilesInfo()
-                                                 {
-                                                     Path = path,
-                                                     Selected = true,
-                                                     Status = "Modified"
-                                                 }).ToList();
-                        listViewChanges.ItemsSource = modifiedFileInfo;
-                        if (modifiedFileInfo.Count > 0)
-                        {
-                            spChangeListControlbar.Visibility = Visibility.Visible;
-                            spChangeListError.Visibility = System.Windows.Visibility.Hidden;
-                        }
-                        else
-                        {
-                            labelErrorChangeList.Content = "No changes detected";
-                    spChangeListError.Visibility = System.Windows.Visibility.Visible;
-                    spChangeListControlbar.Visibility = System.Windows.Visibility.Hidden;
-                        }
-
-                    }
+                    this.selectedRepoPath = selectedItem.Path;
+                    changeset.getModifiedFilesAsync(
+                        selectedItem.Path,
+                        new EventHandler<ProgressEventArgs>(modifiedListProgress),
+                        new EventHandler<CompletedEventArgs>(modifiedListCompleted));
                 }
                 catch (Exception ex)
                 {
-                    labelErrorChangeList.Content = "Error getting changelist from the specified path";
-                    spChangeListError.Visibility = System.Windows.Visibility.Visible;
-                    spChangeListControlbar.Visibility = System.Windows.Visibility.Hidden;
+                    showMessage("Error finding modifications for the selected archive", true);
+                    this.selectedRepoPath = string.Empty;
                 }
                 listViewRepos.Items.Refresh();
             }
@@ -191,9 +186,9 @@ namespace SvnChangeSetMetro
 
         private void buttonSaveChangeList_Click(object sender, RoutedEventArgs e)
         {
-            System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            if( folderBrowserDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK &&
-                !string.IsNullOrEmpty(folderBrowserDialog1.SelectedPath))
+            System.Windows.Forms.FolderBrowserDialog folderBrowser = new System.Windows.Forms.FolderBrowserDialog();
+            if( folderBrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK &&
+                !string.IsNullOrEmpty(folderBrowser.SelectedPath))
             {
                 List<string> filetoSave = (from change in this.modifiedFileInfo
                                            where change.Selected
@@ -202,7 +197,12 @@ namespace SvnChangeSetMetro
                 if (filetoSave.Count > 0)
                 {
                     LibSvnChangeSet.SvnChangeSetMaker changeset = new LibSvnChangeSet.SvnChangeSetMaker();
-                    changeset.createChangeList(filetoSave, selectedRepoPath, folderBrowserDialog1.SelectedPath);
+                    changeset.createChangeList(filetoSave, selectedRepoPath, folderBrowser.SelectedPath);
+                    if (checkboxSaveInZip.IsChecked == true)
+                        if(SvnChangeSetHelper.zipChangeSetDir(selectedRepoPath, folderBrowser.SelectedPath+"\\changeset.zip"))
+                            MessageBox.Show("Failed to create zip file at - " + folderBrowser.SelectedPath);
+
+                    MessageBox.Show("Saved change set to " + folderBrowser.SelectedPath);
                 }
             }
         }
@@ -232,9 +232,12 @@ namespace SvnChangeSetMetro
             listViewRepos.Items.Refresh();
         }
 
-        private void listViewRepos_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void showMessage(string message, bool bError)
         {
-            
+            labelErrorChangeList.Content = message;
+            controlbarSave.Visibility = bError ? System.Windows.Visibility.Hidden : System.Windows.Visibility.Visible;
+            controlbarSelectDeselect.Visibility = bError ? System.Windows.Visibility.Hidden : System.Windows.Visibility.Visible;
         }
+
     }
 }

@@ -201,7 +201,7 @@ namespace UnitTest
 
         void cb_completed(object sender, CompletedEventArgs e)
         {
-            Console.WriteLine(e.Message);
+            Console.WriteLine(e.ErrorMessage);
         }
     }
 }

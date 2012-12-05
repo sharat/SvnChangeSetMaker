@@ -117,7 +117,11 @@ namespace LibSvnChangeSet
         #region Background Workers
         void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            this.bgWorkerInfo.CompletedHandler(sender, new CompletedEventArgs() { Message = "Completed" });
+            if(e.Error == null)
+                this.bgWorkerInfo.CompletedHandler(sender, new CompletedEventArgs() { ErrorMessage = string.Empty });
+            else
+                this.bgWorkerInfo.CompletedHandler(sender, new CompletedEventArgs() { ErrorMessage = "Error getting changes from given path" });
+
         }
 
         void bw_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -142,7 +146,7 @@ namespace LibSvnChangeSet
                          svargs.LocalContentStatus == SvnStatus.Deleted ||
                          svargs.LocalContentStatus == SvnStatus.Merged)
                          bw.ReportProgress(0, svargs.FullPath);
-                         fileList.Add(svargs.FullPath);
+                     fileList.Add(svargs.FullPath);
                      if (bw.CancellationPending)
                      {
                          e.Cancel = true;

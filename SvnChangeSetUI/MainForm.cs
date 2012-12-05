@@ -36,7 +36,7 @@ namespace SvnChangeSet
 
         void cb_Completed(object sender, CompletedEventArgs e)
         {
-            MessageBox.Show(e.Message);
+            MessageBox.Show(e.ErrorMessage);
         }
 
         private void buttonZip_Click(object sender, EventArgs e)

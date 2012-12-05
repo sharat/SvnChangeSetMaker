@@ -28,7 +28,7 @@ namespace LibSvnChangeSet
                     string[] filenames = Directory.GetFiles(sourceDirPath);
                     zfile.AddFiles(filenames, true, string.Empty);
 
-                    string zipFilePath = sourceDirPath + "\\" + "ChangeSet.zip";
+                    string zipFilePath = targetZipPath;
                     using (FileStream file = new FileStream(zipFilePath, FileMode.Create))
                     {
                         zfile.Save(file);
