@@ -26,7 +26,6 @@
 
         </Controls:WindowCommands>
     </Controls:MetroWindow.WindowCommands>
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="64" />
@@ -36,17 +35,29 @@
             <ColumnDefinition Width="400" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
+        
         <StackPanel Margin="10,10,10,10" VerticalAlignment="Center">
-            <DockPanel>
-                <TextBlock DockPanel.Dock="Left" Text="Repository Path" VerticalAlignment="Center"></TextBlock>
-                <TextBox Name="textBoxRepoPath" Controls:TextboxHelper.ClearTextButton="True" Margin="5,0,0,0" HorizontalAlignment="Stretch" MinWidth="260"></TextBox>
-                <Button DockPanel.Dock="Right" Name="buttonAddRepo" Width="32" Content="+" HorizontalAlignment="Right" Click="buttonAddRepo_Click"></Button>
-            </DockPanel>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="32"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="86"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="32"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Column="0" DockPanel.Dock="Left" Content="Repository Path" VerticalAlignment="Center"></Label>
+                <TextBox Grid.Column="1" Name="textBoxRepoPath" Controls:TextboxHelper.ClearTextButton="True" Margin="5,0,0,0" HorizontalAlignment="Stretch"></TextBox>
+                <Button Grid.Column="2" DockPanel.Dock="Right" Name="buttonAddRepo" Width="32" Content="+" HorizontalAlignment="Right" Click="buttonAddRepo_Click"></Button>
+            </Grid>
+            
+
         </StackPanel>
 
         <ListBox Grid.Row="1" Grid.Column="0" Margin="12,0,10,12" Name="listViewRepos"
                  IsSynchronizedWithCurrentItem="True"
-                 Visibility="Visible" SelectionMode="Single" SelectionChanged="listViewRepos_SelectionChanged">
+                 Visibility="Visible" SelectionMode="Single" SelectionChanged="listViewRepos_SelectionChanged" MouseRightButtonDown="listViewRepos_MouseRightButtonDown" MouseDown="listViewRepos_MouseDown">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
@@ -55,6 +66,13 @@
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
+            
+            <ListBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="open in explorer" Click="MenuItem_OpenInExpolorer_Click"></MenuItem>
+                    <MenuItem Header="Delete" Click="MenuItem_delete_Click"></MenuItem>
+                </ContextMenu>
+            </ListBox.ContextMenu>
         </ListBox>
 
         <ListBox Grid.Column="1" Grid.Row="1" Margin="12,0,10,12" Name="listViewChanges" Background="AliceBlue" BorderBrush="Black">
@@ -69,7 +87,10 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <StackPanel Visibility="Visible" Name="changeListControlbar" Grid.Column="1" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+        <StackPanel Name="spChangeListError" Visibility="Hidden" Grid.Column="1" Grid.Row="0">
+            <Label Name="labelErrorChangeList" FontSize="14"></Label>
+        </StackPanel>
+        <StackPanel Name="spChangeListControlbar" Grid.Column="1" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
             <CheckBox IsChecked="True" Content="Save in Zip format" VerticalAlignment="Center"></CheckBox>
             <Button Name="buttonSaveChangeList" Margin="10,0,0,0" Click="buttonSaveChangeList_Click">
                 <Rectangle Width="20" Height="20">

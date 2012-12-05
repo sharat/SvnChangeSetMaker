@@ -7,6 +7,7 @@ using System.IO;
 using System;
 using MahApps.Metro;
 using System.Windows.Media.Imaging;
+using System.Diagnostics;
 
 namespace SvnChangeSetMetro
 {
@@ -47,6 +48,7 @@ namespace SvnChangeSetMetro
             InitializeRepoData();
             modifiedFileInfo = new List<ChangedFilesInfo>();
             listViewChanges.ItemsSource = modifiedFileInfo;
+            spChangeListControlbar.Visibility = System.Windows.Visibility.Hidden;
         }
 
         private void buttoncheckForModifications_Click(object sender, RoutedEventArgs e)
@@ -135,13 +137,13 @@ namespace SvnChangeSetMetro
 
         private void listViewRepos_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            
             RepoInfo selectedItem = (RepoInfo)listViewRepos.SelectedItem;
-            if (this.selectedRepoPath == selectedItem.Path)
+            if (selectedItem != null && this.selectedRepoPath == selectedItem.Path)
                 return;
             else
             {
-
+                this.modifiedFileInfo.Clear();
+                listViewChanges.ItemsSource = this.modifiedFileInfo;
                 try
                 {
                     LibSvnChangeSet.SvnChangeSetMaker changeset = new LibSvnChangeSet.SvnChangeSetMaker();
@@ -149,7 +151,7 @@ namespace SvnChangeSetMetro
                     if (modifiedFileList == null)
                     {
                         selectedRepoPath = string.Empty;
-                        changeListControlbar.Visibility = System.Windows.Visibility.Hidden;
+                        spChangeListControlbar.Visibility = System.Windows.Visibility.Hidden;
                     }
                     else
                     {
@@ -163,14 +165,27 @@ namespace SvnChangeSetMetro
                                                      Status = "Modified"
                                                  }).ToList();
                         listViewChanges.ItemsSource = modifiedFileInfo;
-                        if(modifiedFileInfo.Count > 0)
-                            changeListControlbar.Visibility = Visibility.Visible;
+                        if (modifiedFileInfo.Count > 0)
+                        {
+                            spChangeListControlbar.Visibility = Visibility.Visible;
+                            spChangeListError.Visibility = System.Windows.Visibility.Hidden;
+                        }
+                        else
+                        {
+                            labelErrorChangeList.Content = "No changes detected";
+                    spChangeListError.Visibility = System.Windows.Visibility.Visible;
+                    spChangeListControlbar.Visibility = System.Windows.Visibility.Hidden;
+                        }
+
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error getting changelist from the specified path");
+                    labelErrorChangeList.Content = "Error getting changelist from the specified path";
+                    spChangeListError.Visibility = System.Windows.Visibility.Visible;
+                    spChangeListControlbar.Visibility = System.Windows.Visibility.Hidden;
                 }
+                listViewRepos.Items.Refresh();
             }
         }
 
@@ -190,6 +205,36 @@ namespace SvnChangeSetMetro
                     changeset.createChangeList(filetoSave, selectedRepoPath, folderBrowserDialog1.SelectedPath);
                 }
             }
+        }
+
+        private void listViewRepos_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            listViewRepos.ContextMenu.IsOpen = true;
+        }
+
+        private void MenuItem_OpenInExpolorer_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                RepoInfo rp = (RepoInfo)listViewRepos.SelectedItem;
+                Process.Start(rp.Path);
+            }
+            catch 
+            {
+                MessageBox.Show("Error opening the given path");
+            }
+        }
+
+        private void MenuItem_delete_Click(object sender, RoutedEventArgs e)
+        {
+            RepoInfo rp = (RepoInfo )listViewRepos.SelectedItem;
+            this.repositoryInfo.Remove(rp);
+            listViewRepos.Items.Refresh();
+        }
+
+        private void listViewRepos_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            
         }
     }
 }
