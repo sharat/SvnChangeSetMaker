@@ -1,4 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Repositories>
-  
+  <Repo>
+    <Name>Test Repo</Name>
+    <Description>Test Description</Description>
+    <Path>C:\Windows</Path>
+  </Repo>
 </Repositories>
