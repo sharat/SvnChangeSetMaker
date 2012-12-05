@@ -30,6 +30,5 @@ This application is solely created using .NET Framework 4.0 but SharpSVN library
   <startup useLegacyV2RuntimeActivationPolicy="true">
     <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.0,Profile=Client" />
   </startup>
-  
 </configuration>
 ```
