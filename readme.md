@@ -20,3 +20,16 @@ To get the changesets [BackgroundWorker](http://msdn.microsoft.com/en-us/library
 
 ## MetroUI
 The Application features different type of UI. The standalone Metro application uses [Mahapps.Metro](https://github.com/MahApps/MahApps.Metro) Framework.
+
+## The woes of different .NET Frameworks (2.0 and 4.0)
+This application is solely created using .NET Framework 4.0 but SharpSVN library is developed using .NET Framework 2.0. The applications neesd to change the `app.config` file as follows. (need to add `useLegacyV2RuntimeActivationPolicy` inside `startup` node.
+
+```
+<?xml version="1.0"?>
+<configuration>
+  <startup useLegacyV2RuntimeActivationPolicy="true">
+    <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.0,Profile=Client" />
+  </startup>
+  
+</configuration>
+```
