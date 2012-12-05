@@ -12,9 +12,11 @@ This helps to create a changeset of a given archive to the specified destination
  - Visual Studio 2010 (.NET Framework 3.5)
 
 ## How the changesets are made?
-<TODO>
+This application using SharpSVN 1.7 (x86) for populating the change list. The changesets are made using `SvnClient` class and check against `LocalContentStatus`. The implementation can be found at `SvnChangeSet.cs` in `LibSvnChangeSet` class
+The zip file is made using DotNetZip library and use can choose to zip or store as raw changes in the folder specified by the user
 
 ## Background Worker
+To get the changesets [BackgroundWorker](http://msdn.microsoft.com/en-us/library/system.componentmodel.backgroundworker.aspx) class is used. The user can give custom event handler to subscribe for notifications.
 
 ## MetroUI
 
