@@ -15,7 +15,6 @@ namespace LibSvnChangeSet
         {
             try
             {
-
                 if (string.IsNullOrEmpty(targetZipPath) || !Directory.Exists(sourceDirPath) || string.IsNullOrEmpty(sourceDirPath))
                     return false;
 
@@ -32,6 +31,7 @@ namespace LibSvnChangeSet
                     using (FileStream file = new FileStream(zipFilePath, FileMode.Create))
                     {
                         zfile.Save(file);
+                        deleteRawChangesets(zipFilePath);
                         return true;
                     }
                 }
@@ -58,6 +58,38 @@ namespace LibSvnChangeSet
             string dirPath = Path.GetDirectoryName(fullFilePath);
             if (!Directory.Exists(dirPath))
                 Directory.CreateDirectory(dirPath);
+        }
+
+        internal static void deleteRawChangesets(string fullFilePath)
+        {
+            string dirPath = Path.GetDirectoryName(fullFilePath);
+
+            try
+            {
+                Directory.Delete( dirPath += "\\old", true);
+            }
+            catch
+            {
+
+            }
+
+            try
+            {
+                Directory.Delete(dirPath += "\\new", true);
+            }
+            catch
+            {
+
+            }
+
+            try
+            {
+                File.Delete(dirPath += "ChangeSet.txt");
+            }
+            catch
+            {
+            }
+
         }
         #endregion
     }

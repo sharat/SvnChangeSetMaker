@@ -69,9 +69,9 @@
             </ListBox.ItemTemplate>
             <ListBox.ContextMenu>
                 <ContextMenu>
+                    <MenuItem Header="refresh" Click="MenuItem_refresh_Click"></MenuItem>
                     <MenuItem Header="open in explorer" Click="MenuItem_OpenInExpolorer_Click"></MenuItem>
                     <MenuItem Header="delete" Click="MenuItem_delete_Click"></MenuItem>
-                    <MenuItem Header="refresh" Click="MenuItem_delete_Click"></MenuItem>
                 </ContextMenu>
             </ListBox.ContextMenu>
         </ListBox>

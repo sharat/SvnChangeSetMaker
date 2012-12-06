@@ -168,6 +168,11 @@ namespace SvnChangeSetMetro
         
         private void listViewRepos_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
+            getModifiedFileList();
+        }
+
+        private void getModifiedFileList()
+        {
             RepoInfo selectedItem = (RepoInfo)listViewRepos.SelectedItem;
             if (selectedItem != null && this.selectedRepoPath == selectedItem.Path)
                 return;
@@ -247,6 +252,11 @@ namespace SvnChangeSetMetro
             textBoxRepoPath.Text = rp.Path;
             this.repositoryInfo.Remove(rp);
             listViewRepos.Items.Refresh();
+        }
+
+        private void MenuItem_refresh_Click(object sender, RoutedEventArgs e)
+        {
+            getModifiedFileList();
         }
 
         private void showMessage(string message, bool bShowOnlyMessageArea)
