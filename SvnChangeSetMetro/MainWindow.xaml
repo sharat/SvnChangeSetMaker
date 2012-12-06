@@ -4,7 +4,6 @@
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         Title="ChangeSet Maker" Height="760" Width="1024" ShowIconOnTitleBar="True" Closing="MetroWindow_Closing" TitlebarHeight="48">
 
-
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -56,7 +55,7 @@
             </Grid>
         </StackPanel>
 
-        <ListBox Grid.Row="1" Grid.Column="0" Margin="12,0,10,12" Name="listViewRepos"
+        <ListBox Grid.Row="1" Grid.Column="0" Margin="10,0,10,10" Name="listViewRepos"
                  IsSynchronizedWithCurrentItem="True"
                  Visibility="Visible" SelectionMode="Single" SelectionChanged="listViewRepos_SelectionChanged" MouseRightButtonDown="listViewRepos_MouseRightButtonDown">
             <ListBox.ItemTemplate>
@@ -64,57 +63,63 @@
                     <StackPanel Margin="0,1,0,0">
                         <Label x:Name="lbItemTitle" Content="{Binding Name}"></Label>
                         <Label x:Name="lbItemPath" Content="{Binding Path}"></Label>
-                        <Controls:MetroProgressBar Height ="5" Name="progressControl" Visibility="{Binding ShowProgress}" IsIndeterminate="True"></Controls:MetroProgressBar>
+                        <Controls:MetroProgressBar Height ="5" Name="progressControl" Foreground="Green" Visibility="{Binding ShowProgress}" IsIndeterminate="True"></Controls:MetroProgressBar>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
             <ListBox.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="open in explorer" Click="MenuItem_OpenInExpolorer_Click"></MenuItem>
-                    <MenuItem Header="Delete" Click="MenuItem_delete_Click"></MenuItem>
+                    <MenuItem Header="delete" Click="MenuItem_delete_Click"></MenuItem>
+                    <MenuItem Header="refresh" Click="MenuItem_delete_Click"></MenuItem>
                 </ContextMenu>
             </ListBox.ContextMenu>
         </ListBox>
 
         
         <Grid Grid.Column="1" Grid.Row="0" Background="#DDDDDD" Name="gridControlbar">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="128"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="32"></RowDefinition>
+                <RowDefinition Height="32"></RowDefinition>
+            </Grid.RowDefinitions>
 
 
             <!--Controlbar-->
-            <StackPanel Name="controlbarError" Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center">
-                <Label Name="labelErrorChangeList" Margin="10,0,0,0"  Foreground="#626262" MinHeight="32" FontSize="16" FontWeight="DemiBold"></Label>
-                
-                <StackPanel Name="controlbarSelectDeselect">
-                    <CheckBox Name="checkboxSelectDeselect" IsChecked="True" Margin="10,0,10,0" Content="Select/Deselect " VerticalAlignment="Center"></CheckBox>
+            <StackPanel Name="controlbarError" Grid.Row="0" Orientation="Vertical" VerticalAlignment="Center">
+                <Label Name="labelErrorChangeList" Margin="0,0,0,0"  Foreground="#626262" MinHeight="32" FontSize="16" FontWeight="DemiBold"></Label>
+            </StackPanel>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="128"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <StackPanel Name="controlbarSelectDeselect" Grid.Column="0" VerticalAlignment="Center">
+                    <CheckBox Name="checkboxSelectDeselect" IsChecked="True" Margin="10,0,10,0" Content="Select/Deselect "></CheckBox>
                 </StackPanel>
-            </StackPanel>
-            
-            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Name="controlbarSave">
-                <CheckBox Name="checkboxSaveInZip" IsChecked="True" Content="Zip format" VerticalAlignment="Center"></CheckBox>
-                <Button Name="buttonSaveChangeList" Margin="10,0,0,0" Click="buttonSaveChangeList_Click">
-                    <Rectangle Width="20" Height="20">
-                        <Rectangle.Resources>
-                            <SolidColorBrush x:Key="BlackBrush" Color="Blue"/>
-                        </Rectangle.Resources>
-                        <Rectangle.Fill>
-                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_save}" />
-                        </Rectangle.Fill>
-                    </Rectangle>
-                </Button>
-            </StackPanel>
+                <StackPanel Name="controlbarSave" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <CheckBox Name="checkboxSaveInZip" IsChecked="True" Content="Zip format" VerticalAlignment="Center"></CheckBox>
+                    <Button Name="buttonSaveChangeList" Margin="10,0,0,0" Click="buttonSaveChangeList_Click">
+                        <Rectangle Width="20" Height="20">
+                            <Rectangle.Resources>
+                                <SolidColorBrush x:Key="BlackBrush" Color="Blue"/>
+                            </Rectangle.Resources>
+                            <Rectangle.Fill>
+                                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_save}" />
+                            </Rectangle.Fill>
+                        </Rectangle>
+                    </Button>
+                </StackPanel>
+            </Grid>
         </Grid>
-        <StackPanel Grid.Column="1" Grid.Row="1" >
-            <ListBox Margin="12,0,10,12" Name="listViewChanges">
+        <StackPanel Grid.Row="1" Grid.Column="1">
+            <ListBox Margin="0,0,10,0" Name="listViewChanges">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <CheckBox x:Name="lblChangedSelected" IsChecked="{Binding Selected}" VerticalAlignment="Center"></CheckBox>
-                                <Label x:Name="lblChangedStatus" Content="{Binding Status}"></Label>
-                                <Label x:Name="lblChangedPath" Content="{Binding Path}"></Label>
+                            <CheckBox x:Name="lblChangedSelected" IsChecked="{Binding Selected}" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="10,0,0,0"></CheckBox>
+                            <Label x:Name="lblChangedStatus" Content="{Binding Status}" VerticalContentAlignment="Center"></Label>
+                            <Label x:Name="lblChangedPath" Content="{Binding Path}" VerticalContentAlignment="Center"></Label>
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>

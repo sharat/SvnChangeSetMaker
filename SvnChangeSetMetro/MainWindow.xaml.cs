@@ -50,16 +50,14 @@ namespace SvnChangeSetMetro
             listViewChanges.ItemsSource = modifiedFileInfo;
         }
 
-        private void buttoncheckForModifications_Click(object sender, RoutedEventArgs e)
-        {
-           // activityProgressbar.IsActive = true;
-            LibSvnChangeSet.SvnChangeSetMaker helper = new LibSvnChangeSet.SvnChangeSetMaker();
-            string localPath = @"D:\dev\ExportTool\trunk";
-            List<string> modifiedFiles = helper.getModifiedFiles(localPath);
-        }
-
         private void buttonAddRepo_Click(object sender, RoutedEventArgs e)
         {
+            if (!SvnChangeSetMaker.IsWorkingCopy(textBoxRepoPath.Text))
+            {
+                MessageBox.Show("The given directory is not a SVN repository...", "Invalid Repository", MessageBoxButton.OK, MessageBoxImage.Error);            
+                return;
+            }
+
             if (!repositoryInfo.Any((repo) => repo.Path == textBoxRepoPath.Text))
             {
                 repositoryInfo.Add(new RepoInfo()
@@ -67,9 +65,10 @@ namespace SvnChangeSetMetro
                     Path = textBoxRepoPath.Text,
                     Name = "Testing",
                     Description = "Sample Description",
-                    ShowProgress = System.Windows.Visibility.Hidden
+                    ShowProgress = Visibility.Hidden
                 });
                 listViewRepos.Items.Refresh();
+                textBoxRepoPath.Text = string.Empty;
             }
             else
                 MessageBox.Show("Selected repository already exists");
@@ -99,7 +98,7 @@ namespace SvnChangeSetMetro
                                           Name = (string)repo.Element("Name"),
                                           Path = (string)repo.Element("Path"),
                                           Description = (string)repo.Element("Description"),
-                                          ShowProgress = System.Windows.Visibility.Hidden
+                                          ShowProgress = Visibility.Hidden
                                       }).ToList();
                     listViewRepos.ItemsSource = repositoryInfo;
                     listViewRepos.Items.Refresh();
@@ -141,6 +140,7 @@ namespace SvnChangeSetMetro
         {
             this.modifiedFileInfo.Add(new ChangedFilesInfo() { Path = e.FileName, Status = e.FileStatus.ToString(), Selected = true });
             listViewChanges.Items.Refresh();
+            showMessage("Checking for changes...", false);
         }
 
         void modifiedListCompleted(object sender, CompletedEventArgs e)
@@ -165,7 +165,7 @@ namespace SvnChangeSetMetro
             else
                 showMessage("No changes found...", true);
         }
-
+        
         private void listViewRepos_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             RepoInfo selectedItem = (RepoInfo)listViewRepos.SelectedItem;
@@ -181,6 +181,7 @@ namespace SvnChangeSetMetro
                 listViewChanges.ItemsSource = this.modifiedFileInfo;
                 try
                 {
+                    showMessage(string.Empty, true);
                     LibSvnChangeSet.SvnChangeSetMaker changeset = new LibSvnChangeSet.SvnChangeSetMaker();
                     this.selectedRepoPath = selectedItem.Path;
                     selectedItem.ShowProgress = System.Windows.Visibility.Visible;
@@ -243,15 +244,16 @@ namespace SvnChangeSetMetro
         private void MenuItem_delete_Click(object sender, RoutedEventArgs e)
         {
             RepoInfo rp = (RepoInfo )listViewRepos.SelectedItem;
+            textBoxRepoPath.Text = rp.Path;
             this.repositoryInfo.Remove(rp);
             listViewRepos.Items.Refresh();
         }
 
-        private void showMessage(string message, bool bError)
+        private void showMessage(string message, bool bShowOnlyMessageArea)
         {
             labelErrorChangeList.Content = message;
-            controlbarSave.Visibility = bError ? System.Windows.Visibility.Hidden : System.Windows.Visibility.Visible;
-            controlbarSelectDeselect.Visibility = bError ? System.Windows.Visibility.Hidden : System.Windows.Visibility.Visible;
+            controlbarSelectDeselect.Visibility = bShowOnlyMessageArea ? Visibility.Hidden : Visibility.Visible;
+            controlbarSave.Visibility = bShowOnlyMessageArea ? Visibility.Hidden : Visibility.Visible;
         }
         #endregion
 

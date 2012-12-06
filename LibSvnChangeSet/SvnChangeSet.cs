@@ -114,6 +114,20 @@ namespace LibSvnChangeSet
             return false;
         }
 
+        /// <summary>
+        /// Check if the given path is a working copy or not
+        /// </summary>
+        /// <param name="path">local path to the respository</param>
+        /// <returns></returns>
+        public static bool IsWorkingCopy(string path)
+        {
+            using (var client = new SvnClient())
+            {
+                var uri = client.GetUriFromWorkingCopy(path);
+                return uri != null;
+            }
+        }
+
         #region Background Workers
         void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
