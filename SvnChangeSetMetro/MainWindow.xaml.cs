@@ -60,10 +60,20 @@ namespace SvnChangeSetMetro
 
             if (!repositoryInfo.Any((repo) => repo.Path == textBoxRepoPath.Text))
             {
+                string name = Path.GetDirectoryName(textBoxRepoPath.Text);
+                string[] pathSplit = textBoxRepoPath.Text.Split(@"\/".ToCharArray());
+
+                if (pathSplit.Count() > 2)
+                {
+                    int count = pathSplit.Count();
+                    name = pathSplit[count - 2] +
+                        @"\" + pathSplit[count - 1];
+                }
+
                 repositoryInfo.Add(new RepoInfo()
                 {
                     Path = textBoxRepoPath.Text,
-                    Name = "Testing",
+                    Name = name,
                     Description = "Sample Description",
                     ShowProgress = Visibility.Hidden
                 });
@@ -267,5 +277,30 @@ namespace SvnChangeSetMetro
         }
         #endregion
 
+        private void checkboxSelectDeselect_Checked(object sender, RoutedEventArgs e)
+        {
+            bool bChecked = (bool)checkboxSelectDeselect.IsChecked;
+            this.modifiedFileInfo.Select(c => { c.Selected = bChecked; return c; }).ToList();
+            listViewChanges.Items.Refresh();
+        }
+
+        private void checkboxSelectDeselect_Checked_1(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private void checkboxSelectDeselect_Click(object sender, RoutedEventArgs e)
+        {
+            if (modifiedFileInfo != null)
+            {
+                bool bChecked = (bool)checkboxSelectDeselect.IsChecked;
+                foreach (ChangedFilesInfo c in this.modifiedFileInfo)
+                {
+                    c.Selected = true;
+                }
+                listViewChanges.ItemsSource = this.modifiedFileInfo;
+                listViewChanges.Items.Refresh();
+            }
+        }
     }
 }

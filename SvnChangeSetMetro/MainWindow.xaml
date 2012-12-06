@@ -23,7 +23,7 @@
             <Button Content="settings" />
         </Controls:WindowCommands>
     </Controls:MetroWindow.WindowCommands>
-    
+
     <!--Main Grid-->
     <Grid>
         <Grid.RowDefinitions>
@@ -34,26 +34,24 @@
             <ColumnDefinition Width="400" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        
-        <StackPanel Margin="10,10,10,10" VerticalAlignment="Center">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="32"></RowDefinition>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="96"></ColumnDefinition>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                    <ColumnDefinition Width="32"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
 
-                <Label Grid.Column="0" Content="Repository Path" VerticalAlignment="Center"></Label>
-                <TextBox Grid.Column="1" MinHeight="32" Name="textBoxRepoPath" 
+        <Grid Margin="10,10,10,10" Grid.Row="0" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="32"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="96"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="32"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Column="0" Content="Repository Path" VerticalAlignment="Center"></Label>
+            <TextBox Grid.Column="1" MinHeight="32" Name="textBoxRepoPath" 
                          Controls:TextboxHelper.ClearTextButton="True" HorizontalAlignment="Stretch"
                          FontSize="14"
                          VerticalContentAlignment="Center"></TextBox>
-                <Button Grid.Column="2" Name="buttonAddRepo" Width="32" Content="+" HorizontalAlignment="Right" Click="buttonAddRepo_Click"></Button>
-            </Grid>
-        </StackPanel>
+            <Button Grid.Column="2" Name="buttonAddRepo" Width="32" Content="+" HorizontalAlignment="Right" Click="buttonAddRepo_Click"></Button>
+        </Grid>
 
         <ListBox Grid.Row="1" Grid.Column="0" Margin="10,0,10,10" Name="listViewRepos"
                  IsSynchronizedWithCurrentItem="True"
@@ -61,8 +59,8 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Margin="0,1,0,0">
-                        <Label x:Name="lbItemTitle" Content="{Binding Name}"></Label>
-                        <Label x:Name="lbItemPath" Content="{Binding Path}"></Label>
+                        <Label x:Name="lbItemTitle" Content="{Binding Name}" FontSize="18" FontWeight="DemiBold"></Label>
+                        <Label x:Name="lbItemPath" Content="{Binding Path}" Foreground="BlueViolet"></Label>
                         <Controls:MetroProgressBar Height ="5" Name="progressControl" Foreground="Green" Visibility="{Binding ShowProgress}" IsIndeterminate="True"></Controls:MetroProgressBar>
                     </StackPanel>
                 </DataTemplate>
@@ -76,7 +74,7 @@
             </ListBox.ContextMenu>
         </ListBox>
 
-        
+
         <Grid Grid.Column="1" Grid.Row="0" Background="#DDDDDD" Name="gridControlbar">
             <Grid.RowDefinitions>
                 <RowDefinition Height="32"></RowDefinition>
@@ -95,7 +93,7 @@
                     <ColumnDefinition Width="128"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <StackPanel Name="controlbarSelectDeselect" Grid.Column="0" VerticalAlignment="Center">
-                    <CheckBox Name="checkboxSelectDeselect" IsChecked="True" Margin="10,0,10,0" Content="Select/Deselect "></CheckBox>
+                    <CheckBox Name="checkboxSelectDeselect" IsChecked="True" Margin="10,0,10,0" Content="Select/Deselect" Checked="checkboxSelectDeselect_Checked_1" Click="checkboxSelectDeselect_Click"></CheckBox>
                 </StackPanel>
                 <StackPanel Name="controlbarSave" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                     <CheckBox Name="checkboxSaveInZip" IsChecked="True" Content="Zip format" VerticalAlignment="Center"></CheckBox>
@@ -113,17 +111,20 @@
             </Grid>
         </Grid>
         <StackPanel Grid.Row="1" Grid.Column="1">
-            <ListBox Margin="0,0,10,0" Name="listViewChanges">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <ListBox Margin="0,0,10,0" Name="listViewChanges" SelectionMode="Multiple">
+                <ListBox.InputBindings>
+                    <KeyBinding Command="ApplicationCommands.SelectAll" Modifiers="Ctrl" Key="A"></KeyBinding>
+                </ListBox.InputBindings>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <CheckBox x:Name="lblChangedSelected" IsChecked="{Binding Selected}" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="10,0,0,0"></CheckBox>
                             <Label x:Name="lblChangedStatus" Content="{Binding Status}" VerticalContentAlignment="Center"></Label>
                             <Label x:Name="lblChangedPath" Content="{Binding Path}" VerticalContentAlignment="Center"></Label>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </StackPanel>
     </Grid>
 </Controls:MetroWindow>
