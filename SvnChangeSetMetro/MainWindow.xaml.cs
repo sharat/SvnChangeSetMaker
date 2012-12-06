@@ -60,8 +60,11 @@ namespace SvnChangeSetMetro
 
             if (!repositoryInfo.Any((repo) => repo.Path == textBoxRepoPath.Text))
             {
+                string path = textBoxRepoPath.Text;
+                path = path.TrimEnd('\\');
                 string name = Path.GetDirectoryName(textBoxRepoPath.Text);
-                string[] pathSplit = textBoxRepoPath.Text.Split(@"\/".ToCharArray());
+                string[] pathSplit = path.Split('\\');
+
 
                 if (pathSplit.Count() > 2)
                 {
@@ -72,7 +75,7 @@ namespace SvnChangeSetMetro
 
                 repositoryInfo.Add(new RepoInfo()
                 {
-                    Path = textBoxRepoPath.Text,
+                    Path = path,
                     Name = name,
                     Description = "Sample Description",
                     ShowProgress = Visibility.Hidden
