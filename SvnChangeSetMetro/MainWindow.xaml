@@ -18,14 +18,14 @@
         </ResourceDictionary>
     </Window.Resources>
 
-
-
+    <!--Titlebar tweaks-->
     <Controls:MetroWindow.WindowCommands>
         <Controls:WindowCommands>
             <Button Content="settings" />
-
         </Controls:WindowCommands>
     </Controls:MetroWindow.WindowCommands>
+    
+    <!--Main Grid-->
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="64" />
@@ -42,17 +42,18 @@
                     <RowDefinition Height="32"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="86"></ColumnDefinition>
+                    <ColumnDefinition Width="96"></ColumnDefinition>
                     <ColumnDefinition Width="*"></ColumnDefinition>
                     <ColumnDefinition Width="32"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
 
-                <Label Grid.Column="0" DockPanel.Dock="Left" Content="Repository Path" VerticalAlignment="Center"></Label>
-                <TextBox Grid.Column="1" MinHeight="32" Name="textBoxRepoPath" Controls:TextboxHelper.ClearTextButton="True" Margin="5,0,0,0" HorizontalAlignment="Stretch"></TextBox>
-                <Button Grid.Column="2" DockPanel.Dock="Right" Name="buttonAddRepo" Width="32" Content="+" HorizontalAlignment="Right" Click="buttonAddRepo_Click"></Button>
+                <Label Grid.Column="0" Content="Repository Path" VerticalAlignment="Center"></Label>
+                <TextBox Grid.Column="1" MinHeight="32" Name="textBoxRepoPath" 
+                         Controls:TextboxHelper.ClearTextButton="True" HorizontalAlignment="Stretch"
+                         FontSize="14"
+                         VerticalContentAlignment="Center"></TextBox>
+                <Button Grid.Column="2" Name="buttonAddRepo" Width="32" Content="+" HorizontalAlignment="Right" Click="buttonAddRepo_Click"></Button>
             </Grid>
-            
-
         </StackPanel>
 
         <ListBox Grid.Row="1" Grid.Column="0" Margin="12,0,10,12" Name="listViewRepos"
@@ -60,13 +61,13 @@
                  Visibility="Visible" SelectionMode="Single" SelectionChanged="listViewRepos_SelectionChanged" MouseRightButtonDown="listViewRepos_MouseRightButtonDown">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel>
+                    <StackPanel Margin="0,1,0,0">
                         <Label x:Name="lbItemTitle" Content="{Binding Name}"></Label>
                         <Label x:Name="lbItemPath" Content="{Binding Path}"></Label>
+                        <Controls:MetroProgressBar Height ="5" Name="progressControl" Visibility="{Binding ShowProgress}" IsIndeterminate="True"></Controls:MetroProgressBar>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
-            
             <ListBox.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="open in explorer" Click="MenuItem_OpenInExpolorer_Click"></MenuItem>
@@ -75,14 +76,18 @@
             </ListBox.ContextMenu>
         </ListBox>
 
-        <Grid Grid.Column="1" Grid.Row="0" Background="Beige" Name="gridControlbar">
+        
+        <Grid Grid.Column="1" Grid.Row="0" Background="#DDDDDD" Name="gridControlbar">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="128"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            
+
+
+            <!--Controlbar-->
             <StackPanel Name="controlbarError" Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center">
-                <Label Name="labelErrorChangeList" Margin="10,0,0,0"  Foreground="Blue" MinHeight="32"></Label>
+                <Label Name="labelErrorChangeList" Margin="10,0,0,0"  Foreground="#626262" MinHeight="32" FontSize="16" FontWeight="DemiBold"></Label>
+                
                 <StackPanel Name="controlbarSelectDeselect">
                     <CheckBox Name="checkboxSelectDeselect" IsChecked="True" Margin="10,0,10,0" Content="Select/Deselect " VerticalAlignment="Center"></CheckBox>
                 </StackPanel>
@@ -93,7 +98,7 @@
                 <Button Name="buttonSaveChangeList" Margin="10,0,0,0" Click="buttonSaveChangeList_Click">
                     <Rectangle Width="20" Height="20">
                         <Rectangle.Resources>
-                            <SolidColorBrush x:Key="BlackBrush" Color="Black" />
+                            <SolidColorBrush x:Key="BlackBrush" Color="Blue"/>
                         </Rectangle.Resources>
                         <Rectangle.Fill>
                             <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_save}" />
@@ -101,16 +106,8 @@
                     </Rectangle>
                 </Button>
             </StackPanel>
-            
         </Grid>
-
-        
-        
-        
-        
         <StackPanel Grid.Column="1" Grid.Row="1" >
-            
-
             <ListBox Margin="12,0,10,12" Name="listViewChanges">
                     <ListBox.ItemTemplate>
                         <DataTemplate>

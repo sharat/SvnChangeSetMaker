@@ -25,6 +25,7 @@ namespace SvnChangeSetMetro
             public string Name { get; set; }
             public string Path { get; set; }
             public string Description { get; set; }
+            public System.Windows.Visibility ShowProgress { get; set; }
         }
 
         class ChangedFilesInfo
@@ -40,12 +41,10 @@ namespace SvnChangeSetMetro
 
         private string selectedRepoPath = string.Empty;
 
-
         public MainWindow()
         {
             InitializeComponent();
             ThemeManager.ChangeTheme(this, ThemeManager.DefaultAccents.First(a => a.Name == "Orange"), Theme.Light);
-
             InitializeRepoData();
             modifiedFileInfo = new List<ChangedFilesInfo>();
             listViewChanges.ItemsSource = modifiedFileInfo;
@@ -67,7 +66,8 @@ namespace SvnChangeSetMetro
                 {
                     Path = textBoxRepoPath.Text,
                     Name = "Testing",
-                    Description = "Sample Description"
+                    Description = "Sample Description",
+                    ShowProgress = System.Windows.Visibility.Hidden
                 });
                 listViewRepos.Items.Refresh();
             }
@@ -98,9 +98,11 @@ namespace SvnChangeSetMetro
                                       {
                                           Name = (string)repo.Element("Name"),
                                           Path = (string)repo.Element("Path"),
-                                          Description = (string)repo.Element("Description")
+                                          Description = (string)repo.Element("Description"),
+                                          ShowProgress = System.Windows.Visibility.Hidden
                                       }).ToList();
                     listViewRepos.ItemsSource = repositoryInfo;
+                    listViewRepos.Items.Refresh();
                 }
 
             }
@@ -144,7 +146,18 @@ namespace SvnChangeSetMetro
         void modifiedListCompleted(object sender, CompletedEventArgs e)
         {
             listViewChanges.ItemsSource = this.modifiedFileInfo;
+            RepoInfo v = (RepoInfo)(from info in repositoryInfo 
+                    where info.Path == selectedRepoPath
+                    select info).First();
+            if (v != null)
+            {
+                v.ShowProgress = System.Windows.Visibility.Hidden;
+                listViewRepos.Items.Refresh();
+            }
+
             listViewChanges.Items.Refresh();
+            RepoInfo selectedItem = (RepoInfo)listViewRepos.SelectedItem;
+            selectedItem.ShowProgress = System.Windows.Visibility.Hidden;
             if (!string.IsNullOrEmpty(e.ErrorMessage))
                 showMessage(e.ErrorMessage, true);
             else if (this.modifiedFileInfo.Count > 0)
@@ -170,6 +183,7 @@ namespace SvnChangeSetMetro
                 {
                     LibSvnChangeSet.SvnChangeSetMaker changeset = new LibSvnChangeSet.SvnChangeSetMaker();
                     this.selectedRepoPath = selectedItem.Path;
+                    selectedItem.ShowProgress = System.Windows.Visibility.Visible;
                     changeset.getModifiedFilesAsync(
                         selectedItem.Path,
                         new EventHandler<ProgressEventArgs>(modifiedListProgress),
@@ -207,6 +221,7 @@ namespace SvnChangeSetMetro
             }
         }
 
+        #region context menu handlers
         private void listViewRepos_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             listViewRepos.ContextMenu.IsOpen = true;
@@ -238,6 +253,7 @@ namespace SvnChangeSetMetro
             controlbarSave.Visibility = bError ? System.Windows.Visibility.Hidden : System.Windows.Visibility.Visible;
             controlbarSelectDeselect.Visibility = bError ? System.Windows.Visibility.Hidden : System.Windows.Visibility.Visible;
         }
+        #endregion
 
     }
 }
