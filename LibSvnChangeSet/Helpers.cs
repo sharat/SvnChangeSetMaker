@@ -24,8 +24,8 @@ namespace LibSvnChangeSet
                 {
                     zfile.AddDirectory(sourceDirPath);
                     zfile.SaveProgress += new EventHandler<Ionic.Zip.SaveProgressEventArgs>(zfile_SaveProgress);
-                    string[] filenames = Directory.GetFiles(sourceDirPath);
-                    zfile.AddFiles(filenames, true, string.Empty);
+                    //string[] filenames = Directory.GetFiles(sourceDirPath, "*.*", SearchOption.AllDirectories);
+                    //zfile.AddFiles(filenames, true, string.Empty);
 
                     string zipFilePath = targetZipPath;
                     using (FileStream file = new FileStream(zipFilePath, FileMode.Create))
@@ -66,7 +66,7 @@ namespace LibSvnChangeSet
 
             try
             {
-                Directory.Delete( dirPath += "\\old", true);
+                Directory.Delete( dirPath + "\\old", true);
             }
             catch
             {
@@ -75,7 +75,7 @@ namespace LibSvnChangeSet
 
             try
             {
-                Directory.Delete(dirPath += "\\new", true);
+                Directory.Delete(dirPath + "\\new", true);
             }
             catch
             {

@@ -58,7 +58,7 @@ namespace SvnChangeSetMetro
                 return;
             }
 
-            if (!repositoryInfo.Any((repo) => repo.Path == textBoxRepoPath.Text))
+            if (!repositoryInfo.Any((repo) => repo.Path.ToLower() == textBoxRepoPath.Text.ToLower()))
             {
                 string path = textBoxRepoPath.Text;
                 path = path.TrimEnd('\\');
@@ -223,6 +223,7 @@ namespace SvnChangeSetMetro
             if( folderBrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK &&
                 !string.IsNullOrEmpty(folderBrowser.SelectedPath))
             {
+                // Choose only selected items
                 List<string> filetoSave = (from change in this.modifiedFileInfo
                                            where change.Selected
                                            select change.Path).ToList();
@@ -232,10 +233,12 @@ namespace SvnChangeSetMetro
                     LibSvnChangeSet.SvnChangeSetMaker changeset = new LibSvnChangeSet.SvnChangeSetMaker();
                     changeset.createChangeList(filetoSave, selectedRepoPath, folderBrowser.SelectedPath);
                     if (checkboxSaveInZip.IsChecked == true)
-                        if(SvnChangeSetHelper.zipChangeSetDir(selectedRepoPath, folderBrowser.SelectedPath+"\\changeset.zip"))
+                        if (SvnChangeSetHelper.zipChangeSetDir(folderBrowser.SelectedPath, folderBrowser.SelectedPath + "\\changeset.zip"))
+                            MessageBox.Show("Saved change set to " + folderBrowser.SelectedPath);
+                        else
                             MessageBox.Show("Failed to create zip file at - " + folderBrowser.SelectedPath);
 
-                    MessageBox.Show("Saved change set to " + folderBrowser.SelectedPath);
+                    
                 }
             }
         }
@@ -287,21 +290,12 @@ namespace SvnChangeSetMetro
             listViewChanges.Items.Refresh();
         }
 
-        private void checkboxSelectDeselect_Checked_1(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
         private void checkboxSelectDeselect_Click(object sender, RoutedEventArgs e)
         {
             if (modifiedFileInfo != null)
             {
                 bool bChecked = (bool)checkboxSelectDeselect.IsChecked;
-                foreach (ChangedFilesInfo c in this.modifiedFileInfo)
-                {
-                    c.Selected = true;
-                }
-                listViewChanges.ItemsSource = this.modifiedFileInfo;
+                this.modifiedFileInfo.ForEach(info => info.Selected = bChecked);
                 listViewChanges.Items.Refresh();
             }
         }

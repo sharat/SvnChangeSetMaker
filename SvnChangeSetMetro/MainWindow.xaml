@@ -93,7 +93,7 @@
                     <ColumnDefinition Width="128"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <StackPanel Name="controlbarSelectDeselect" Grid.Column="0" VerticalAlignment="Center">
-                    <CheckBox Name="checkboxSelectDeselect" IsChecked="True" Margin="10,0,10,0" Content="Select/Deselect" Checked="checkboxSelectDeselect_Checked_1" Click="checkboxSelectDeselect_Click"></CheckBox>
+                    <CheckBox Name="checkboxSelectDeselect" IsChecked="True" Margin="10,0,10,0" Content="Select/Deselect" Click="checkboxSelectDeselect_Click"></CheckBox>
                 </StackPanel>
                 <StackPanel Name="controlbarSave" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                     <CheckBox Name="checkboxSaveInZip" IsChecked="True" Content="Zip format" VerticalAlignment="Center"></CheckBox>
@@ -118,7 +118,7 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <CheckBox x:Name="lblChangedSelected" IsChecked="{Binding Selected}" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="10,0,0,0"></CheckBox>
+                            <CheckBox x:Name="lblChangedSelected" IsChecked="{Binding Selected, Mode=TwoWay}" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="10,0,0,0"></CheckBox>
                             <Label x:Name="lblChangedStatus" Content="{Binding Status}" VerticalContentAlignment="Center"></Label>
                             <Label x:Name="lblChangedPath" Content="{Binding Path}" VerticalContentAlignment="Center"></Label>
                         </StackPanel>
