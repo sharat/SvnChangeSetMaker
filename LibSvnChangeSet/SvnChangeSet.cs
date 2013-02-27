@@ -47,6 +47,8 @@ namespace LibSvnChangeSet
                 Directory.CreateDirectory(newDirPath);
                 Directory.CreateDirectory(oldDirPath);
 
+                List<string> modifiedFilesRelativePath = new List<string>();
+
                 if (Directory.Exists(newDirPath) && Directory.Exists(oldDirPath))
                 {
                     foreach (string file in modifiedFileList)
@@ -54,6 +56,7 @@ namespace LibSvnChangeSet
                         if (file.StartsWith(localArchivePath))
                         {
                             string subPath = file.Substring(localArchivePath.Length);
+                            modifiedFilesRelativePath.Add(subPath);
                             if (!string.IsNullOrEmpty(subPath))
                             {
                                 string oldFilePath = oldDirPath + @"\" + subPath;

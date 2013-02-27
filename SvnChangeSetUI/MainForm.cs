@@ -42,7 +42,7 @@ namespace SvnChangeSet
         private void buttonZip_Click(object sender, EventArgs e)
         {
             SvnChangeSetMaker helper = new SvnChangeSetMaker();
-            string localPath = @"";
+            string localPath = string.Empty;
             List<string> files = helper.getModifiedFiles(localPath);
             helper.createChangeList(files,localPath, @"C:\temp\cs");
             SvnChangeSetHelper.zipChangeSetDir(@"C:\temp\cs", @"C:\temp\cs\ChangeSet.zip");

@@ -232,10 +232,10 @@ namespace SvnChangeSetMetro
                     LibSvnChangeSet.SvnChangeSetMaker changeset = new LibSvnChangeSet.SvnChangeSetMaker();
                     changeset.createChangeList(filetoSave, selectedRepoPath, folderBrowser.SelectedPath);
                     if (checkboxSaveInZip.IsChecked == true)
-                        if(SvnChangeSetHelper.zipChangeSetDir(selectedRepoPath, folderBrowser.SelectedPath+"\\changeset.zip"))
+                        if (SvnChangeSetHelper.zipChangeSetDir(folderBrowser.SelectedPath, folderBrowser.SelectedPath + "\\changeset.zip"))
+                            MessageBox.Show("Saved change set to " + folderBrowser.SelectedPath);
+                        else 
                             MessageBox.Show("Failed to create zip file at - " + folderBrowser.SelectedPath);
-
-                    MessageBox.Show("Saved change set to " + folderBrowser.SelectedPath);
                 }
             }
         }

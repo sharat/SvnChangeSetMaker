@@ -23,6 +23,7 @@ namespace LibSvnChangeSet
                 using (Ionic.Zip.ZipFile zfile = new Ionic.Zip.ZipFile())
                 {
                     zfile.AddDirectory(sourceDirPath);
+                    
                     zfile.SaveProgress += new EventHandler<Ionic.Zip.SaveProgressEventArgs>(zfile_SaveProgress);
                     string[] filenames = Directory.GetFiles(sourceDirPath);
                     zfile.AddFiles(filenames, true, string.Empty);
@@ -66,7 +67,7 @@ namespace LibSvnChangeSet
 
             try
             {
-                Directory.Delete( dirPath += "\\old", true);
+                Directory.Delete( dirPath + "\\old", true);
             }
             catch
             {
@@ -75,7 +76,7 @@ namespace LibSvnChangeSet
 
             try
             {
-                Directory.Delete(dirPath += "\\new", true);
+                Directory.Delete(dirPath + "\\new", true);
             }
             catch
             {
@@ -84,7 +85,7 @@ namespace LibSvnChangeSet
 
             try
             {
-                File.Delete(dirPath += "ChangeSet.txt");
+                File.Delete(dirPath + "ChangeSet.txt");
             }
             catch
             {
