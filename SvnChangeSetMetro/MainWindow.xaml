@@ -17,13 +17,6 @@
         </ResourceDictionary>
     </Window.Resources>
 
-    <!--Titlebar tweaks-->
-    <Controls:MetroWindow.WindowCommands>
-        <Controls:WindowCommands>
-            <Button Content="settings" />
-        </Controls:WindowCommands>
-    </Controls:MetroWindow.WindowCommands>
-
     <!--Main Grid-->
     <Grid>
         <Grid.RowDefinitions>
@@ -90,12 +83,16 @@
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"></ColumnDefinition>
-                    <ColumnDefinition Width="128"></ColumnDefinition>
+                    <ColumnDefinition Width="380"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <StackPanel Name="controlbarSelectDeselect" Grid.Column="0" VerticalAlignment="Center">
                     <CheckBox Name="checkboxSelectDeselect" IsChecked="True" Margin="10,0,10,0" Content="Select/Deselect" Click="checkboxSelectDeselect_Click"></CheckBox>
                 </StackPanel>
+                
                 <StackPanel Name="controlbarSave" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <CheckBox Name="checkboxSaveUnderArchivePath" IsChecked="True" Content="Save under archive path" VerticalAlignment="Center"></CheckBox>
+                    <TextBox Text="changeset.zip" MinWidth ="100" Height="9" Margin="5,5,5,0" Name="textboxZipFileName" IsEnabled="{Binding Path=IsChecked, ElementName=checkboxSaveInZip, Mode=OneWay}" VerticalAlignment="Center" >
+                    </TextBox>
                     <CheckBox Name="checkboxSaveInZip" IsChecked="True" Content="Zip format" VerticalAlignment="Center"></CheckBox>
                     <Button Name="buttonSaveChangeList" Margin="10,0,0,0" Click="buttonSaveChangeList_Click">
                         <Rectangle Width="20" Height="20">

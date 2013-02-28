@@ -32,7 +32,6 @@ namespace LibSvnChangeSet
                     using (FileStream file = new FileStream(zipFilePath, FileMode.Create))
                     {
                         zfile.Save(file);
-                        deleteRawChangesets(zipFilePath);
                         return true;
                     }
                 }
@@ -61,36 +60,20 @@ namespace LibSvnChangeSet
                 Directory.CreateDirectory(dirPath);
         }
 
-        internal static void deleteRawChangesets(string fullFilePath)
+        public static void deletePath(string fullFilePath)
         {
             string dirPath = Path.GetDirectoryName(fullFilePath);
-
             try
             {
-                Directory.Delete( dirPath + "\\old", true);
+                if(Directory.Exists(fullFilePath))
+                    Directory.Delete( fullFilePath, true);
+                else
+                    File.Delete(fullFilePath);
             }
             catch
             {
 
             }
-
-            try
-            {
-                Directory.Delete(dirPath + "\\new", true);
-            }
-            catch
-            {
-
-            }
-
-            try
-            {
-                File.Delete(dirPath + "ChangeSet.txt");
-            }
-            catch
-            {
-            }
-
         }
         #endregion
     }

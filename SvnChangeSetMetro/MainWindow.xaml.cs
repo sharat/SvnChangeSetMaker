@@ -9,6 +9,7 @@ using MahApps.Metro;
 using System.Windows.Media.Imaging;
 using System.Diagnostics;
 using LibSvnChangeSet;
+using System.Windows.Data;
 
 namespace SvnChangeSetMetro
 {
@@ -219,9 +220,18 @@ namespace SvnChangeSetMetro
 
         private void buttonSaveChangeList_Click(object sender, RoutedEventArgs e)
         {
-            System.Windows.Forms.FolderBrowserDialog folderBrowser = new System.Windows.Forms.FolderBrowserDialog();
-            if( folderBrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK &&
-                !string.IsNullOrEmpty(folderBrowser.SelectedPath))
+            string dirPathToSave = this.selectedRepoPath;
+            string tempDirPath = dirPathToSave;
+            if(false == checkboxSaveUnderArchivePath.IsChecked)
+            {
+                System.Windows.Forms.FolderBrowserDialog folderBrowser = new System.Windows.Forms.FolderBrowserDialog();
+                if( folderBrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    dirPathToSave = folderBrowser.SelectedPath;
+                else
+                    return;
+            }
+
+            if (!string.IsNullOrEmpty(dirPathToSave))
             {
                 // Choose only selected items
                 List<string> filetoSave = (from change in this.modifiedFileInfo
@@ -230,20 +240,33 @@ namespace SvnChangeSetMetro
 
                 if (filetoSave.Count > 0)
                 {
-                    LibSvnChangeSet.SvnChangeSetMaker changeset = new LibSvnChangeSet.SvnChangeSetMaker();
-                    changeset.createChangeList(filetoSave, selectedRepoPath, folderBrowser.SelectedPath);
-                    if (checkboxSaveInZip.IsChecked == true)
-                        if (SvnChangeSetHelper.zipChangeSetDir(folderBrowser.SelectedPath, folderBrowser.SelectedPath + "\\changeset.zip"))
-                            MessageBox.Show("Saved change set to " + folderBrowser.SelectedPath);
-<<<<<<< HEAD
-                        else 
-                            MessageBox.Show("Failed to create zip file at - " + folderBrowser.SelectedPath);
-=======
-                        else
-                            MessageBox.Show("Failed to create zip file at - " + folderBrowser.SelectedPath);
 
-                    
->>>>>>> 16a8fc950579f5d2d9141aca7d4f53f7cd823c0c
+                    List<string> filesToDelete = new List<string>();
+
+                    if (checkboxSaveUnderArchivePath.IsChecked == true)
+                    {
+                        tempDirPath = dirPathToSave + "\\svncm_temp";
+                    }
+
+                    LibSvnChangeSet.SvnChangeSetMaker changeset = new LibSvnChangeSet.SvnChangeSetMaker();
+                    changeset.createChangeList(filetoSave, selectedRepoPath, tempDirPath);
+                    if (checkboxSaveInZip.IsChecked == true)
+                    {
+                        filesToDelete.Add(tempDirPath);
+                        filesToDelete.Add(tempDirPath + "\\old");
+                        filesToDelete.Add(tempDirPath + "\\new");
+                        filesToDelete.Add(tempDirPath + "\\changeset.txt");
+                        if (SvnChangeSetHelper.zipChangeSetDir(tempDirPath, dirPathToSave + "\\" + textboxZipFileName.Text))
+                            MessageBox.Show("Saved changes set to " + dirPathToSave);
+                        else
+                            MessageBox.Show("Failed to create zip file at - " + dirPathToSave);
+
+                        foreach (var path in filesToDelete)
+                            SvnChangeSetHelper.deletePath(path);
+                    }
+                    else
+                        MessageBox.Show("Saved changes set to " + tempDirPath);
+
                 }
             }
         }
@@ -277,6 +300,7 @@ namespace SvnChangeSetMetro
 
         private void MenuItem_refresh_Click(object sender, RoutedEventArgs e)
         {
+            this.selectedRepoPath = string.Empty;
             getModifiedFileList();
         }
 
