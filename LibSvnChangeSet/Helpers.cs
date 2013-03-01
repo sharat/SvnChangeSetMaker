@@ -23,33 +23,15 @@ namespace LibSvnChangeSet
                 using (Ionic.Zip.ZipFile zfile = new Ionic.Zip.ZipFile())
                 {
                     zfile.AddDirectory(sourceDirPath);
-                    
-                    zfile.SaveProgress += new EventHandler<Ionic.Zip.SaveProgressEventArgs>(zfile_SaveProgress);
-                    //string[] filenames = Directory.GetFiles(sourceDirPath, "*.*", SearchOption.AllDirectories);
-                    //zfile.AddFiles(filenames, true, string.Empty);
-
-                    string zipFilePath = targetZipPath;
-                    using (FileStream file = new FileStream(zipFilePath, FileMode.Create))
-                    {
-                        zfile.Save(file);
-                        return true;
-                    }
+                    //zfile.AddDirectory(sourceDirPath + "\\new");
+                    zfile.Save(targetZipPath);
+                    return true;
                 }
             }
             catch (Exception)
             {
                 return false;
             }
-        }
-
-        /// <summary>
-        /// Progress of the zip operation
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        static void zfile_SaveProgress(object sender, Ionic.Zip.SaveProgressEventArgs e)
-        {
-            
         }
 
         #region helper functions
